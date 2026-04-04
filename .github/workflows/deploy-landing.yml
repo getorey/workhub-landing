@@ -23,10 +23,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
+      # 1) Landing (Next.js) 빌드
       - run: npm ci
       - run: npm run build
+
+      # 2) VitePress 매뉴얼 빌드
+      - run: npm ci
+        working-directory: docs-manual
+      - run: npx vitepress build
+        working-directory: docs-manual
+
+      # 3) 두 빌드 결과 합치기: out/ + out/docs/
+      - name: Merge landing + docs
+        run: |
+          mkdir -p out/docs
+          cp -r docs-manual/.vitepress/dist/* out/docs/
 
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+const basePath = process.env.NODE_ENV === "production" ? "/workhub-landing" : "";
+
 const links = [
   { label: "강점", href: "#features" },
   { label: "기능", href: "#bots" },
@@ -10,6 +12,7 @@ const links = [
   { label: "기술", href: "#tech" },
   { label: "보안", href: "#security" },
   { label: "가격", href: "#pricing" },
+  { label: "문서", href: `${basePath}/docs/` },
 ];
 
 export default function Navbar() {

@@ -1,0 +1,120 @@
+/* Workhub 다크 테마 — 랜딩 사이트(gray-950 + brand blue) 톤 매칭 */
+
+:root {
+  --vp-c-brand-1: #3b82f6;
+  --vp-c-brand-2: #60a5fa;
+  --vp-c-brand-3: #2563eb;
+  --vp-c-brand-soft: rgba(59, 130, 246, 0.14);
+}
+
+.dark {
+  --vp-c-bg: #0a0e1a;
+  --vp-c-bg-alt: #0f1629;
+  --vp-c-bg-elv: #141b2d;
+  --vp-c-bg-soft: #1a2332;
+
+  --vp-c-text-1: rgba(255, 255, 255, 0.87);
+  --vp-c-text-2: rgba(255, 255, 255, 0.6);
+  --vp-c-text-3: rgba(255, 255, 255, 0.38);
+
+  --vp-c-divider: rgba(255, 255, 255, 0.08);
+  --vp-c-gutter: #0a0e1a;
+
+  --vp-c-brand-1: #60a5fa;
+  --vp-c-brand-2: #3b82f6;
+  --vp-c-brand-3: #93c5fd;
+  --vp-c-brand-soft: rgba(59, 130, 246, 0.16);
+
+  --vp-button-brand-bg: #3b82f6;
+  --vp-button-brand-hover-bg: #2563eb;
+  --vp-button-brand-active-bg: #1d4ed8;
+
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #a78bfa 100%);
+  --vp-home-hero-image-background-image: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(167, 139, 250, 0.2) 100%);
+  --vp-home-hero-image-filter: blur(56px);
+}
+
+/* 네비게이션 바 — 랜딩과 통일된 어두운 배경 */
+.dark .VPNav {
+  background-color: rgba(10, 14, 26, 0.85) !important;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* 사이드바 배경 */
+.dark .VPSidebar {
+  background-color: rgba(10, 14, 26, 0.95) !important;
+}
+
+/* 홈페이지 상단에 랜딩으로 돌아가기 배너 */
+.back-to-landing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+  font-size: 0.875rem;
+  color: var(--vp-c-text-2);
+}
+
+.back-to-landing a {
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.back-to-landing a:hover {
+  text-decoration: underline;
+}
+
+/* Feature 카드 스타일 강화 */
+.dark .VPFeature {
+  background-color: rgba(20, 27, 45, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  transition: border-color 0.25s, transform 0.25s;
+}
+
+.dark .VPFeature:hover {
+  border-color: rgba(59, 130, 246, 0.3) !important;
+  transform: translateY(-2px);
+}
+
+/* 코드 블록 */
+.dark .vp-code-group .tabs label {
+  background-color: transparent;
+}
+
+.dark div[class*='language-'] {
+  background-color: rgba(10, 14, 26, 0.9) !important;
+}
+
+/* 테이블 스타일 */
+.dark .vp-doc table {
+  border-collapse: collapse;
+}
+
+.dark .vp-doc tr {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dark .vp-doc tr:nth-child(2n) {
+  background-color: rgba(15, 22, 41, 0.5);
+}
+
+/* 스크롤바 */
+.dark ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background-color: transparent;
+}
