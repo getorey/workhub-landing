@@ -56,6 +56,7 @@ export default defineConfig({
             { text: '조직도', link: '/02-user-guide/org-tree' },
             { text: '연락처', link: '/02-user-guide/contacts' },
             { text: '검색', link: '/02-user-guide/search' },
+            { text: '봇 사용법', link: '/02-user-guide/bots' },
           ],
         },
       ],
