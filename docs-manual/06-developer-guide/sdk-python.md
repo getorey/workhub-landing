@@ -249,45 +249,356 @@ except Exception as e:
 
 ## 예제: Echo 봇
 
+채널에 메시지가 올라오면 그대로 되돌려보내는 봇입니다. Webhook 수신 → 메시지 전송의 기본 흐름을 익힐 수 있습니다.
+
+### 프로젝트 구성
+
+```bash
+mkdir echo-bot && cd echo-bot
+pip install workhub-bot-sdk
+```
+
+### echo_bot.py
+
 ```python
+import os
 from workhub_bot_sdk import WorkhubBot, WebhookServer, WebhookEvent
 
+# 1. 봇 클라이언트 — Workhub API 호출용
 bot = WorkhubBot(
-    base_url="http://localhost:8080",
-    api_key="whb_xxxxxxxx_live_xxxxxxxxxxxxxxxx",
+    base_url=os.getenv("WORKHUB_URL", "http://localhost:8080"),
+    api_key=os.getenv("BOT_API_KEY", "whb_xxxxxxxx_live_xxxxxxxxxxxxxxxx"),
 )
 
-webhook = WebhookServer(port=9000, secret="your-webhook-secret")
+# 2. Webhook 서버 — 이벤트 수신용
+webhook = WebhookServer(
+    port=int(os.getenv("PORT", "9000")),
+    secret=os.getenv("WEBHOOK_SECRET", "your-webhook-secret"),
+)
 
 
+# 3. 메시지 이벤트 핸들러
 @webhook.on("message.created")
 def on_message(event: WebhookEvent):
     data = event.data
     content = data.get("content", "")
     channel_id = data.get("channel_id")
+    sender_type = data.get("sender_type")
+    sender_id = data.get("sender_id")
 
-    # 봇 자신의 메시지는 무시
-    if data.get("sender_type") == "bot":
+    # 봇 자신의 메시지 → 무한 루프 방지
+    if sender_type == "bot":
         return
 
-    if channel_id and content:
+    # 빈 메시지 무시
+    if not channel_id or not content.strip():
+        return
+
+    try:
         bot.send_message(
             channel_id=channel_id,
-            content=f"Echo: {content}",
+            content=f"🔁 **Echo**: {content}",
         )
+        print(f"↩️  [{sender_id}] {content}")
+    except Exception as e:
+        print(f"메시지 전송 실패: {e}")
 
 
+# 4. 시작
 if __name__ == "__main__":
+    info = bot.authenticate()
+    print(f"✅ Echo 봇 연결: {info.bot_id}")
+    print(f"🚀 Webhook 서버 시작: http://localhost:9000/webhook")
     webhook.start()
 ```
 
-실행:
+### 실행
 
 ```bash
+# 환경 변수 설정 후 실행
+export WORKHUB_URL=http://localhost:8080
+export BOT_API_KEY=whb_xxxxxxxx_live_xxxxxxxxxxxxxxxx
+export WEBHOOK_SECRET=your-webhook-secret
+
 python echo_bot.py
 ```
 
+### 동작 흐름
+
+```
+사용자: "안녕하세요"
+       ↓ Workhub → Webhook POST
+Echo 봇: Webhook 수신
+       ↓ bot.send_message()
+채널:   "🔁 Echo: 안녕하세요"
+```
+
+---
+
+## 예제: 회의록 요약 봇
+
+채널에서 `@요약봇 [기간]` 으로 호출하면, 최근 메시지를 읽어 요약 리포트를 작성하는 봇입니다. OpenAI API를 활용한 AI 요약과, AI 없이 통계 기반 요약 두 가지 모드를 지원합니다.
+
+### 프로젝트 구성
+
+```bash
+mkdir summary-bot && cd summary-bot
+pip install workhub-bot-sdk openai
+```
+
+### summary_bot.py
+
+```python
+import os
+import re
+from collections import Counter
+from workhub_bot_sdk import WorkhubBot, WebhookServer, WebhookEvent
+
+# ─── 설정 ───
+bot = WorkhubBot(
+    base_url=os.getenv("WORKHUB_URL", "http://localhost:8080"),
+    api_key=os.getenv("BOT_API_KEY", ""),
+)
+
+webhook = WebhookServer(
+    port=int(os.getenv("PORT", "9100")),
+    secret=os.getenv("WEBHOOK_SECRET", ""),
+)
+
+# OpenAI (선택 — 없으면 통계 기반 요약)
+openai_client = None
+if os.getenv("OPENAI_API_KEY"):
+    from openai import OpenAI
+    openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+BOT_NAME = "요약봇"
+
+
+# ─── 메시지 파싱 ───
+def parse_mention(content: str, channel_id: str):
+    """@요약봇 또는 @요약봇 50 형식 파싱"""
+    pattern = rf"@{BOT_NAME}\s*(\d+)?"
+    match = re.search(pattern, content)
+    if not match:
+        return None
+    limit = int(match.group(1)) if match.group(1) else 30
+    return {"channel_id": channel_id, "limit": min(limit, 100)}
+
+
+# ─── AI 요약 (OpenAI) ───
+def summarize_with_ai(messages: list[str]) -> str:
+    if not openai_client:
+        raise RuntimeError("OpenAI not configured")
+
+    joined = "\n".join(messages)
+    response = openai_client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "당신은 회의록 요약 전문가입니다. 채널 대화 내용을 분석하여 "
+                    "다음 형식으로 요약해주세요:\n"
+                    "- **주요 논의 사항**: 핵심 주제 3~5개\n"
+                    "- **결정 사항**: 합의된 내용\n"
+                    "- **액션 아이템**: 후속 조치가 필요한 항목\n"
+                    "- **참여자**: 대화에 참여한 사람 목록\n"
+                    "간결하고 핵심만 포함하세요. 마크다운 형식을 사용하세요."
+                ),
+            },
+            {
+                "role": "user",
+                "content": f"다음 채널 대화를 요약해주세요:\n\n{joined}",
+            },
+        ],
+        max_tokens=1000,
+        temperature=0.3,
+    )
+    return response.choices[0].message.content or "요약을 생성할 수 없습니다."
+
+
+# ─── 통계 기반 요약 (AI 없이) ───
+def summarize_with_stats(messages: list[dict]) -> str:
+    # 참여자별 메시지 수
+    participants = Counter(m["sender"] for m in messages)
+
+    # 시간 범위
+    first = messages[0].get("timestamp", "") if messages else ""
+    last = messages[-1].get("timestamp", "") if messages else ""
+
+    # 참여자 통계
+    sorted_p = participants.most_common()
+    participant_list = "\n".join(
+        f"  - {name}: {count}건" for name, count in sorted_p
+    )
+
+    # 주요 발언 (길이 순 상위 5개)
+    key_msgs = sorted(
+        [m for m in messages if len(m["content"]) > 20],
+        key=lambda m: len(m["content"]),
+        reverse=True,
+    )[:5]
+    key_list = "\n".join(
+        f"  - **{m['sender']}**: {m['content'][:80]}..."
+        for m in key_msgs
+    ) or "  - (주요 발언 없음)"
+
+    return "\n".join([
+        f"📋 **채널 대화 요약 리포트**",
+        f"",
+        f"📅 **기간**: {first} ~ {last}",
+        f"💬 **총 메시지**: {len(messages)}건",
+        f"👥 **참여자** ({len(participants)}명):",
+        participant_list,
+        f"",
+        f"📌 **주요 발언**:",
+        key_list,
+        f"",
+        f"---",
+        f"> 💡 AI 요약을 활성화하려면 `OPENAI_API_KEY` 환경 변수를 설정하세요.",
+    ])
+
+
+# ─── 이벤트 핸들러 ───
+@webhook.on("message.created")
+def on_message(event: WebhookEvent):
+    data = event.data
+
+    if data.get("sender_type") == "bot":
+        return
+
+    request = parse_mention(data.get("content", ""), data.get("channel_id", ""))
+    if not request:
+        return
+
+    channel_id = request["channel_id"]
+    limit = request["limit"]
+    print(f"📝 요약 요청: channel={channel_id}, limit={limit}")
+
+    try:
+        # 1. 최근 메시지 조회
+        result = bot.read_messages(channel_id=channel_id, limit=limit)
+        messages = result.get("messages", [])
+
+        if not messages:
+            bot.send_message(
+                channel_id=channel_id,
+                content="⚠️ 요약할 메시지가 없습니다.",
+            )
+            return
+
+        # 2. 요약 생성
+        if openai_client:
+            text_lines = [
+                f"[{m.get('sender_name', '?')}] {m.get('content', '')}"
+                for m in messages
+            ]
+            summary = summarize_with_ai(text_lines)
+            summary = f"🤖 **AI 회의록 요약** (최근 {len(messages)}건)\n\n{summary}"
+        else:
+            parsed = [
+                {
+                    "sender": m.get("sender_name", "알 수 없음"),
+                    "content": m.get("content", ""),
+                    "timestamp": m.get("created_at", ""),
+                }
+                for m in messages
+            ]
+            summary = summarize_with_stats(parsed)
+
+        # 3. 요약 전송
+        bot.send_message(channel_id=channel_id, content=summary)
+        print("✅ 요약 전송 완료")
+
+    except Exception as e:
+        print(f"요약 실패: {e}")
+        bot.send_message(
+            channel_id=channel_id,
+            content="❌ 요약 생성 중 오류가 발생했습니다.",
+        )
+
+
+# ─── 시작 ───
+if __name__ == "__main__":
+    info = bot.authenticate()
+    ai_mode = "OpenAI" if openai_client else "통계 기반"
+    print(f"✅ 요약 봇 연결: {info.bot_id}")
+    print(f"🧠 AI 모드: {ai_mode}")
+    print(f"🚀 Webhook 서버 시작: http://localhost:9100/webhook")
+    webhook.start()
+```
+
+### 실행
+
+```bash
+# 기본 (통계 기반 요약)
+export WORKHUB_URL=http://localhost:8080
+export BOT_API_KEY=whb_xxxxxxxx_live_xxxxxxxxxxxxxxxx
+export WEBHOOK_SECRET=your-webhook-secret
+python summary_bot.py
+
+# AI 요약 모드 (OpenAI 키 추가)
+export OPENAI_API_KEY=sk-xxxxxxxxxxxx
+python summary_bot.py
+```
+
+### ���용 방법
+
+채널에서 멘션으로 호출합니다:
+
+```
+@요약봇          → 최근 30건 요약
+@요약봇 50       → 최근 50건 요약
+@요약봇 100      → 최근 100건 요약 (최대)
+```
+
+### 출력 예시 (통계 기반)
+
+```
+📋 채널 대화 요약 리포트
+
+📅 기간: 2026-04-05T09:00:00Z ~ 2026-04-05T11:30:00Z
+💬 총 메시지: 30건
+👥 참여자 (5명):
+  - 김개발: 12건
+  - 이기획: 8건
+  - 박디자인: 5건
+  - 최운영: 3건
+  - 정보안: 2건
+
+📌 주요 발언:
+  - 김개발: API 응답 속도가 200ms 이하로 개선되어야 합니다. 현재 평균...
+  - 이기획: 다음 스프린트에 사용자 프로필 페이지 리뉴얼을 포함하겠...
+  - 박디자인: 모바일 반응형 디자인 시안을 금요일까지 공유드리겠습니...
+```
+
+### 출력 예시 (AI 요약)
+
+```
+🤖 AI 회의록 요약 (최근 30건)
+
+📌 주요 논의 사항:
+- API 성능 최적화 (응답 속도 200ms 목표)
+- 사용자 프로필 페이지 리뉴얼 범위
+- 모바일 반응형 디자인 일정
+
+✅ 결정 사항:
+- API 캐시 레이어 도입 확정
+- 프로필 리뉴얼은 다음 스프린트에 포함
+
+📋 액션 아이템:
+- [ ] 김개발: Redis 캐시 POC (4/8까지)
+- [ ] 박디자인: 모바일 시안 공유 (4/7까지)
+- [ ] 이기획: 스프린트 백로그 업데이트
+
+👥 참여자: 김개발, 이기획, 박디자인, 최운영, 정보안
+```
+
+---
+
 ## 예제: 태스크 관리 봇
+
+MCP 도구를 활용한 간단한 스크립트 예제입니다.
 
 ```python
 from workhub_bot_sdk import WorkhubBot
