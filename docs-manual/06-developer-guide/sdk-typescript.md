@@ -2,6 +2,10 @@
 
 `@workhub/bot-sdk`는 Node.js 환경에서 Workhub 봇을 개발하기 위한 공식 SDK입니다.
 
+- **npm**: @workhub/bot-sdk (배포 예정)
+- **버전**: 0.1.0
+- **라이선스**: MIT
+
 ## 설치
 
 ```bash

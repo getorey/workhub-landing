@@ -2,13 +2,17 @@
 
 `workhub_bot_sdk`는 Python 환경에서 Workhub 봇을 개발하기 위한 공식 SDK입니다.
 
+- **PyPI**: [workhub-bot-sdk](https://pypi.org/project/workhub-bot-sdk/)
+- **버전**: 0.1.0
+- **라이선스**: MIT
+
 ## 설치
 
 ```bash
 pip install workhub-bot-sdk
 ```
 
-> Python 3.9 이상이 필요합니다.
+> Python 3.10 이상이 필요합니다.
 
 ## 클라이언트 초기화
 
