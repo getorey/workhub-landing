@@ -220,11 +220,12 @@ console.log(`총 ${files.total}개 파일`);
 ## 멘션 검색
 
 ```typescript
-// 멘션 대상 검색 (사용자, 부서, @all, @here)
+// 멘션 대상 검색 (사용자, 부서, 봇, @all, @here)
 const targets = await bot.searchMentions({
   q: "김",
   channel_id: "채널-UUID",  // 채널 멤버 우선 표시
 });
+// 결과는 type별로 구분: "special", "user", "department", "bot"
 ```
 
 ## 해시태그

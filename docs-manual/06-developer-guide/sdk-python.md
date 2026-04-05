@@ -197,8 +197,9 @@ print(f"총 {result.total}개 파일")
 ## 멘션 검색
 
 ```python
-# 멘션 대상 검색 (사용자, 부서, @all, @here)
+# 멘션 대상 검색 (사용자, 부서, 봇, @all, @here)
 targets = bot.search_mentions("김", channel_id="채널-UUID")
+# 결과는 type별로 구분: "special", "user", "department", "bot"
 ```
 
 ## 해시태그
