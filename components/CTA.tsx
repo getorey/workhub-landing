@@ -30,12 +30,28 @@ export default function CTA() {
               여러분의 피드백이 더 나은 Workhub를 만듭니다.
             </p>
 
-            <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+            <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:flex-wrap">
               <a
                 href="#pricing"
                 className="rounded-xl bg-white px-8 py-3.5 font-semibold text-gray-900 transition hover:bg-gray-100"
               >
                 온라인 테스트 시작
+              </a>
+              <a
+                href="https://github.com/getorey/workhub-landing/releases/download/v0.1.0-android/workhub-android-debug-v0.1.0.apk"
+                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-8 py-3.5 font-semibold text-white transition hover:bg-emerald-500"
+                download
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="h-5 w-5"
+                  aria-hidden="true"
+                >
+                  <path d="M17.5 9.75a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Zm-11 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Zm10.75-3.42 1.5-2.59a.5.5 0 0 0-.86-.5l-1.51 2.62A8.27 8.27 0 0 0 12 4.5a8.27 8.27 0 0 0-4.38 1.36L6.11 3.24a.5.5 0 0 0-.86.5l1.5 2.59A7.93 7.93 0 0 0 4 12h16a7.93 7.93 0 0 0-2.75-5.67ZM4 13v6.5A1.5 1.5 0 0 0 5.5 21H6v3a1 1 0 1 0 2 0v-3h2v3a1 1 0 1 0 2 0v-3h2v3a1 1 0 1 0 2 0v-3h.5a1.5 1.5 0 0 0 1.5-1.5V13H4Z" />
+                </svg>
+                Android 앱 다운로드 (베타)
               </a>
               <a
                 href="mailto:13thathat@gmail.com?subject=[Workhub 피드백]&body=안녕하세요, Workhub 테스트 후 의견을 보내드립니다.%0A%0A■ 편의성:%0A%0A■ 기능 요청:%0A%0A■ 오류 사항:%0A"
@@ -47,6 +63,10 @@ export default function CTA() {
 
             <p className="mt-6 text-sm text-gray-500">
               13thathat@gmail.com 으로 직접 메일을 보내셔도 됩니다
+              <br />
+              <span className="text-xs text-gray-600">
+                * Android 앱은 debug 빌드입니다 — 설치 시 &quot;출처를 알 수 없는 앱&quot; 허용 필요
+              </span>
             </p>
           </div>
         </motion.div>
