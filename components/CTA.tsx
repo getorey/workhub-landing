@@ -38,7 +38,7 @@ export default function CTA() {
                 온라인 테스트 시작
               </a>
               <a
-                href="https://github.com/getorey/workhub-landing/releases/download/v0.1.0-android/workhub-android-debug-v0.1.0.apk"
+                href="https://github.com/getorey/workhub-landing/releases/download/v0.1.0-android/workhub-android-debug-latest.apk"
                 className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-8 py-3.5 font-semibold text-white transition hover:bg-emerald-500"
                 download
               >
