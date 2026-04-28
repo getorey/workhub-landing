@@ -6,6 +6,7 @@ import Comparison from "@/components/Comparison";
 import TechStack from "@/components/TechStack";
 import Security from "@/components/Security";
 import Pricing from "@/components/Pricing";
+import Downloads from "@/components/Downloads";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
@@ -34,6 +35,7 @@ export default function Home() {
         <TechStack />
         <Security />
         <Pricing />
+        <Downloads />
         <CTA />
       </main>
       <Footer />
