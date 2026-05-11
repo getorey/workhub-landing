@@ -1,0 +1,7 @@
+<svg width="1600" height="400" viewBox="0 0 1600 400" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Workhub horizontal lockup mono white">
+  <title>Workhub — Horizontal Lockup (Mono White)</title>
+  <g transform="translate(40 40) scale(0.3125)">
+    <path d="M120 290L380 800L512 478L644 800L904 290" stroke="#FFFFFF" stroke-width="148" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  <text x="430" y="278" font-family="Inter, Pretendard, 'SF Pro Display', system-ui, -apple-system, sans-serif" font-weight="800" font-size="240" letter-spacing="-12" fill="#FFFFFF">workhub</text>
+</svg>

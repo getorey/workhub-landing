@@ -21,8 +21,13 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-gray-950/80 backdrop-blur-md">
       <div className="section-container flex h-16 items-center justify-between">
-        <a href="#" className="text-xl font-bold tracking-tight">
-          <span className="gradient-text">Workhub</span>
+        <a href="#" className="flex items-center" aria-label="Workhub">
+          {/* Issue #208 — brand-kit horizontal lockup (mono white for dark nav) */}
+          <img
+            src="/brand-lockup-horizontal-white.svg"
+            alt="Workhub"
+            className="h-7 w-auto"
+          />
         </a>
 
         {/* Desktop */}

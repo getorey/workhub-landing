@@ -1,0 +1,10 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Workhub symbol">
+  <title>Workhub — Symbol</title>
+  <defs>
+    <linearGradient id="wColor" x1="120" y1="280" x2="900" y2="780" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2B7BF0"/>
+      <stop offset="1" stop-color="#0B4FCC"/>
+    </linearGradient>
+  </defs>
+  <path d="M120 290L380 800L512 478L644 800L904 290" stroke="url(#wColor)" stroke-width="148" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
