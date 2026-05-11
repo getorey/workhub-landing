@@ -4,10 +4,22 @@ import { motion } from "framer-motion";
 
 const ANDROID_URL =
   "https://github.com/getorey/workhub-landing/releases/download/v0.1.0-android/workhub-android-debug-latest.apk";
+const IOS_TESTFLIGHT_URL = "https://testflight.apple.com/join/HQ8YNMEc";
 const WINDOWS_EXE_URL =
   "https://github.com/getorey/workhub-landing/releases/download/v0.1.0-windows/workhub-windows-installer-latest.exe";
 
-const items = [
+interface DownloadItem {
+  name: string;
+  badge: string;
+  description: string;
+  href: string;
+  cta: string;
+  /** "베타 검토 중" 같은 임시 상태 라벨 */
+  statusLabel?: string;
+  icon: React.ReactNode;
+}
+
+const items: DownloadItem[] = [
   {
     name: "Android",
     badge: "APK (debug)",
@@ -23,6 +35,26 @@ const items = [
         aria-hidden
       >
         <path d="M17.6 9.48l1.84-3.18a.4.4 0 1 0-.69-.4L16.91 9.1A11.43 11.43 0 0 0 12 8a11.43 11.43 0 0 0-4.91 1.1L5.25 5.9a.4.4 0 1 0-.69.4l1.84 3.18A11 11 0 0 0 1 19h22a11 11 0 0 0-5.4-9.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z" />
+      </svg>
+    ),
+  },
+  {
+    name: "iOS",
+    badge: "TestFlight 베타",
+    description:
+      "iPhone / iPad 용 Workhub 베타. TestFlight 앱 (App Store 무료) 설치 후 자동 연결됩니다. iOS 13.0 이상.",
+    href: IOS_TESTFLIGHT_URL,
+    cta: "TestFlight 로 설치",
+    statusLabel: "Apple 베타 검토 중",
+    icon: (
+      <svg
+        className="h-10 w-10 text-gray-100"
+        viewBox="0 0 16 18"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden
+      >
+        <path d="M13.094 9.62c-.02-2.06 1.683-3.05 1.76-3.098-.957-1.4-2.45-1.594-2.984-1.617-1.27-.128-2.476.748-3.119.748-.653 0-1.642-.73-2.7-.71-1.391.022-2.674.81-3.39 2.056-1.444 2.5-.369 6.2 1.04 8.237.69.998 1.51 2.119 2.587 2.078 1.04-.043 1.434-.673 2.69-.673 1.246 0 1.61.673 2.708.65 1.119-.02 1.829-1.012 2.51-2.018.79-1.156 1.117-2.288 1.137-2.347-.025-.011-2.183-.84-2.205-3.306zM11.05 3.72c.574-.697.96-1.665.853-2.626-.825.034-1.823.55-2.416 1.247-.531.616-.996 1.6-.87 2.546.92.071 1.857-.467 2.433-1.167z" />
       </svg>
     ),
   },
@@ -70,7 +102,7 @@ export default function Downloads() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="mt-12 grid gap-6 sm:grid-cols-2"
+          className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
           {items.map((item) => (
             <div
@@ -83,9 +115,16 @@ export default function Downloads() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold">{item.name}</h3>
-                  <span className="mt-1 inline-block rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-xs text-gray-300">
-                    {item.badge}
-                  </span>
+                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                    <span className="inline-block rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-xs text-gray-300">
+                      {item.badge}
+                    </span>
+                    {item.statusLabel && (
+                      <span className="inline-block rounded-full border border-amber-400/30 bg-amber-500/10 px-2.5 py-0.5 text-[11px] text-amber-300">
+                        {item.statusLabel}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -95,6 +134,8 @@ export default function Downloads() {
 
               <a
                 href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-500"
               >
                 <svg
@@ -118,7 +159,8 @@ export default function Downloads() {
         </motion.div>
 
         <p className="mt-8 text-center text-xs text-gray-500">
-          항상 같은 URL — 최신 빌드가 자동으로 갱신됩니다.
+          Android / Windows: 항상 같은 URL — 최신 빌드 자동 갱신.<br className="sm:hidden" />
+          iOS: TestFlight 앱 (App Store) 설치 후 링크 자동 연결.
         </p>
       </div>
     </section>

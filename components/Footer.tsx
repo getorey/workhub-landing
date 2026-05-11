@@ -2,8 +2,13 @@ export default function Footer() {
   return (
     <footer className="border-t border-white/10 py-12">
       <div className="section-container flex flex-col items-center gap-6 text-center">
-        <a href="#" className="text-xl font-bold">
-          <span className="gradient-text">Workhub</span>
+        <a href="#" className="flex items-center" aria-label="Workhub">
+          {/* Issue #208 — brand-kit horizontal lockup (mono white) */}
+          <img
+            src="/brand-lockup-horizontal-white.svg"
+            alt="Workhub"
+            className="h-8 w-auto"
+          />
         </a>
 
         <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">

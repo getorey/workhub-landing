@@ -79,16 +79,29 @@ export default function BotShowcase() {
             <span className="text-4xl">&#x1f6e0;&#xfe0f;</span>
             <div className="text-center sm:text-left">
               <h3 className="text-lg font-bold">
-                커스텀 봇 개발
+                커스텀 봇 개발 <span className="ml-2 align-middle text-xs font-semibold text-brand-300">SDK v0.2.0</span>
               </h3>
               <p className="mt-1 text-sm text-gray-400">
-                REST API + WebSocket으로 나만의 봇을 만들어 팀에 연결하세요. 플랫폼 봇과 동일한 Bot API를 사용해 채널 메시지, 태스크 생성, DM 발송까지 자유롭게 자동화할 수 있습니다.
+                <span className="font-mono text-brand-300">npm install workhub-bot-sdk</span> 또는 <span className="font-mono text-brand-300">pip install workhub-bot-sdk</span> 한 줄로 시작하세요. 메시지 반응/고정/스레드, 태스크 상태·의존성·작업일지, 채널/DM 관리, 알림까지 80+ 메서드를 지원합니다.
               </p>
             </div>
-            <div className="shrink-0">
-              <span className="rounded-full border border-brand-500/40 bg-brand-500/10 px-4 py-1.5 text-sm font-medium text-brand-300">
-                Bot API
-              </span>
+            <div className="flex shrink-0 gap-2">
+              <a
+                href="https://www.npmjs.com/package/workhub-bot-sdk"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-brand-500/40 bg-brand-500/10 px-4 py-1.5 text-sm font-medium text-brand-300 hover:bg-brand-500/20"
+              >
+                npm
+              </a>
+              <a
+                href="https://pypi.org/project/workhub-bot-sdk/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-brand-500/40 bg-brand-500/10 px-4 py-1.5 text-sm font-medium text-brand-300 hover:bg-brand-500/20"
+              >
+                PyPI
+              </a>
             </div>
           </div>
         </motion.div>

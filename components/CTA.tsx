@@ -30,7 +30,7 @@ export default function CTA() {
               여러분의 피드백이 더 나은 Workhub를 만듭니다.
             </p>
 
-            <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:flex-wrap">
+            <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <a
                 href="https://workhub.koavio.com"
                 target="_blank"
