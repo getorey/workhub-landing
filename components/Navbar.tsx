@@ -24,7 +24,7 @@ export default function Navbar() {
         <a href="#" className="flex items-center" aria-label="Workhub">
           {/* Issue #208 — brand-kit horizontal lockup (mono white for dark nav) */}
           <img
-            src="/brand-lockup-horizontal-white.svg"
+            src={`${basePath}/brand-lockup-horizontal-white.svg`}
             alt="Workhub"
             className="h-7 w-auto"
           />

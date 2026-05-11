@@ -1,3 +1,5 @@
+const basePath = process.env.NODE_ENV === "production" ? "/workhub-landing" : "";
+
 export default function Footer() {
   return (
     <footer className="border-t border-white/10 py-12">
@@ -5,7 +7,7 @@ export default function Footer() {
         <a href="#" className="flex items-center" aria-label="Workhub">
           {/* Issue #208 — brand-kit horizontal lockup (mono white) */}
           <img
-            src="/brand-lockup-horizontal-white.svg"
+            src={`${basePath}/brand-lockup-horizontal-white.svg`}
             alt="Workhub"
             className="h-8 w-auto"
           />
