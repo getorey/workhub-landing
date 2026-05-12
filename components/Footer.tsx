@@ -23,10 +23,10 @@ export default function Footer() {
         </div>
 
         <a
-          href="mailto:13thathat@gmail.com"
+          href="mailto:cs@koavio.com"
           className="text-sm text-gray-400 transition hover:text-white"
         >
-          13thathat@gmail.com
+          cs@koavio.com
         </a>
 
         <p className="text-xs text-gray-600">
