@@ -15,15 +15,16 @@ const basePath = process.env.NODE_ENV === "production" ? "/workhub-landing" : ""
 export default function Home() {
   return (
     <>
-      {/* Global fixed background — hub interchange */}
+      {/* Global fixed background — hub interchange
+          opacity 60% × overlay 40% → 약 36% 가시. Hero 의 vignette 와 함께 톤 조정. */}
       <div className="fixed inset-0 -z-10">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={`${basePath}/bg-hub.jpg`}
           alt=""
-          className="h-full w-full object-cover opacity-40 blur-[1px]"
+          className="h-full w-full object-cover opacity-60 blur-[1px]"
         />
-        <div className="absolute inset-0 bg-gray-950/50" />
+        <div className="absolute inset-0 bg-gray-950/40" />
       </div>
 
       <Navbar />

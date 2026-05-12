@@ -11,12 +11,13 @@ export default function Hero() {
         <div className="absolute right-0 top-1/3 h-[400px] w-[400px] rounded-full bg-cyan-500/10 blur-[100px]" />
       </div>
 
-      {/* Radial vignette — center dark fading to transparent */}
+      {/* Radial vignette — center dark fading to transparent.
+          배경 도로 이미지가 은은히 보이도록 중앙 농도를 0.85→0.55, 중간 0.5→0.25 로 완화. */}
       <div
         className="pointer-events-none absolute inset-0 z-[1]"
         style={{
           background:
-            "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(2,6,23,0.85) 0%, rgba(2,6,23,0.5) 50%, transparent 100%)",
+            "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(2,6,23,0.55) 0%, rgba(2,6,23,0.25) 50%, transparent 100%)",
         }}
       />
 
