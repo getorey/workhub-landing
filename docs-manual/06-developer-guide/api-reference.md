@@ -62,6 +62,34 @@ MCP 서버에서 제공하는 도구(tool)와 REST API의 전체 명세입니다
 
 ---
 
+### 메시지 편집 · 삭제 (#99)
+
+`send_message`는 MCP 도구 경유이지만, **편집·삭제는 REST 엔드포인트**를 직접 호출합니다. SDK는 `updateMessage` / `deleteMessage` 네이티브 메서드로 노출됩니다.
+
+#### PUT /api/messages/{id}
+
+메시지 내용을 수정합니다.
+
+- **Scope** (봇): `messages:write`
+- **권한**:
+  - 일반 사용자: 본인이 보낸 메시지만
+  - 봇: `bot_id` 일치하는 메시지만 (자기 자신)
+  - `system_admin`: 모든 메시지
+
+| 필드 | 타입 | 필수 | 제한 | 설명 |
+|------|------|------|------|------|
+| `content` | string | O | 50,000자 | 새 본문 (마크다운) |
+| `content_html` | string | - | 50,000자 | HTML 본문 (서버 sanitize) |
+
+#### DELETE /api/messages/{id}
+
+메시지를 soft delete 합니다 (`deleted_at` 설정). 다른 클라이언트에 `MessageDeleted` 이벤트가 브로드캐스트됩니다.
+
+- **Scope** (봇): `messages:write`
+- **권한**: 편집과 동일
+
+---
+
 ## 채널 & 프로젝트
 
 ### list_channels
@@ -328,25 +356,42 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 
 ---
 
-### 봇 커스텀 명령
+### 봇 커스텀 명령 (슬래시 커맨드)
+
+봇이 자신의 슬래시 명령을 자가 등록/조회/삭제할 수 있습니다. 등록된 명령은 UI의 `/` 팔레트에 즉시 반영됩니다.
+
+**권한 (Bot API Key 호출 시)**
+- `bots:commands:read` — 조회
+- `bots:commands:write` — 등록·삭제
+- 봇은 **자신의 명령만** 관리 가능. URL의 `{botId}`가 인증 주체와 불일치하면 `403` 반환.
+
+**권한 (User Token 호출 시)**
+- 조회: 같은 기관 멤버 누구나
+- 등록·삭제: `system_admin` / `org_admin` / `dept_admin`
 
 #### GET /api/bots/{botId}/commands
 
 봇에 등록된 커스텀 명령 목록을 조회합니다.
 
+- **Scope** (봇 호출 시): `bots:commands:read`
+
 #### POST /api/bots/{botId}/commands
 
 새 커스텀 명령을 등록합니다.
 
+- **Scope** (봇 호출 시): `bots:commands:write`
+
 | 필드 | 타입 | 필수 | 제한 | 설명 |
 |------|------|------|------|------|
-| `command` | string | O | 100자 | 명령어 이름 |
-| `description` | string | O | 500자 | 설명 |
+| `command` | string | O | 100자 | 명령어 이름 (슬래시 제외) |
+| `description` | string | O | 500자 | 설명 (UI 팔레트 표시) |
 | `usage_hint` | string | - | 500자 | 사용법 힌트 |
 
 #### DELETE /api/bots/{botId}/commands/{commandName}
 
 커스텀 명령을 삭제합니다.
+
+- **Scope** (봇 호출 시): `bots:commands:write`
 
 ---
 

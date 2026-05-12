@@ -1,15 +1,15 @@
 # TypeScript SDK
 
-`@workhub/bot-sdk`는 Node.js 환경에서 Workhub 봇을 개발하기 위한 공식 SDK입니다.
+`workhub-bot-sdk`는 Node.js 환경에서 Workhub 봇을 개발하기 위한 공식 SDK입니다.
 
-- **npm**: @workhub/bot-sdk (배포 예정)
-- **버전**: 0.1.0
+- **npm**: [workhub-bot-sdk](https://www.npmjs.com/package/workhub-bot-sdk)
+- **최신 버전**: 0.2.0
 - **라이선스**: MIT
 
 ## 설치
 
 ```bash
-npm install @workhub/bot-sdk
+npm install workhub-bot-sdk
 ```
 
 > Node.js 18 이상이 필요합니다.
@@ -17,7 +17,7 @@ npm install @workhub/bot-sdk
 ## 클라이언트 초기화
 
 ```typescript
-import { WorkhubBot } from "@workhub/bot-sdk";
+import { WorkhubBot } from "workhub-bot-sdk";
 
 const bot = new WorkhubBot({
   baseUrl: "https://workhub.example.com",  // Workhub 서버 URL
@@ -171,24 +171,51 @@ await bot.uploadFile(fileBuffer, "report.pdf", {
 const data = await bot.downloadFile("파일-UUID");
 ```
 
-## 봇 커스텀 명령
+## 봇 커스텀 명령 (슬래시 커맨드)
+
+봇이 자신의 슬래시 명령을 자가 등록/조회/삭제할 수 있습니다. 등록된 명령은 Workhub UI의 `/` 자동완성 팔레트에 즉시 반영됩니다.
+
+**필요한 scope**
+- `bots:commands:read` — 조회
+- `bots:commands:write` — 등록·삭제
+
+**제한**
+- 봇은 **자신의 명령만** 관리할 수 있습니다. 다른 봇의 `bot_id`로 호출하면 `403 Forbidden` 반환.
+- `bot_id` 대신 `"self"` 를 전달하면 SDK가 자동으로 인증된 봇의 UUID를 조회하여 치환합니다.
 
 ```typescript
-// 봇 정보 조회
-const info = await bot.authenticate();
-
-// 커스텀 명령 등록
-const cmd = await bot.createBotCommand(info.bot_id, {
+// 커스텀 명령 등록 (self 사용 권장)
+const cmd = await bot.createBotCommand("self", {
   command: "deploy",
   description: "프로덕션 배포를 실행합니다",
   usage_hint: "/deploy [branch]",
 });
 
 // 등록된 명령 목록
-const commands = await bot.listBotCommands(info.bot_id);
+const commands = await bot.listBotCommands("self");
 
 // 명령 삭제
-await bot.deleteBotCommand(info.bot_id, "deploy");
+await bot.deleteBotCommand("self", "deploy");
+```
+
+**일괄 등록 예시 (부팅 시)**
+
+```typescript
+const COMMANDS: CreateBotCommandParams[] = [
+  { command: "weekly-preview", description: "주간업무 취합 보고서",  usage_hint: "/weekly-preview" },
+  { command: "weekly-reset",   description: "이번 주 주간업무 초기화", usage_hint: "/weekly-reset [YYYY-Www]" },
+  { command: "my-tasks",       description: "내 배정 업무",           usage_hint: "/my-tasks" },
+];
+
+for (const params of COMMANDS) {
+  try {
+    await bot.createBotCommand("self", params);
+  } catch (e) {
+    if ((e as WorkhubBotError).status !== 409) {
+      console.warn("command register failed:", params.command, e);
+    }
+  }
+}
 ```
 
 ## 채널 북마크
@@ -256,6 +283,154 @@ const result = await bot.executeSlashCommand({
 console.log(result.text);
 ```
 
+## v0.2.0 신규 API (36개)
+
+### 메시지 고급 기능
+
+```typescript
+// 메시지 편집 (자기 자신이 보낸 것만, messages:write 필요)
+await bot.updateMessage(messageId, "수정된 내용");
+await bot.updateMessage(messageId, "본문", { content_html: "<p>본문</p>" });
+
+// 메시지 삭제 (soft delete — deleted_at 세팅, 이벤트 브로드캐스트)
+await bot.deleteMessage(messageId);
+
+// 반응 추가/제거/조회
+await bot.addReaction(messageId, "👍");
+await bot.removeReaction(messageId, "👍");
+const reactions = await bot.getReactions(messageId);
+
+// 메시지 고정
+await bot.pinMessage(messageId);
+await bot.unpinMessage(messageId);
+
+// 스레드 답글 조회
+const replies = await bot.listThread(messageId);
+```
+
+::: warning 메시지 편집/삭제 제한
+봇은 **자기가 보낸 메시지만** 편집하거나 삭제할 수 있습니다. 다른 봇/사용자 메시지에 시도 시 `403 Forbidden` 반환. `messages:write` scope 필요.
+:::
+
+### 태스크 고급 기능
+
+```typescript
+// 상태 변경 (todo | in_progress | review | done)
+await bot.updateTaskStatus(taskId, "done");
+
+// 선행 태스크 (의존성)
+await bot.setTaskDependencies(taskId, [prereqId1, prereqId2]);
+
+// 담당자 관리
+await bot.addTaskAssignee(taskId, userId);
+await bot.removeTaskAssignee(taskId, userId);
+
+// 태스크 삭제
+await bot.deleteTask(taskId);
+```
+
+### 작업일지 (Work Log)
+
+```typescript
+// 작업일지 기록
+await bot.createWorkLog({
+  task_id: taskId,
+  work_date: "2026-04-18",
+  start_time: "09:00",
+  end_time: "18:00",
+  memo: "구현 완료",
+});
+
+// 날짜 범위로 조회
+const logs = await bot.listWorkLogs({
+  from: "2026-04-01",
+  to: "2026-04-30",
+});
+
+// 삭제
+await bot.deleteWorkLog(workLogId);
+```
+
+### 채널 관리
+
+```typescript
+// 채널 생성
+const ch = await bot.createChannel({
+  name: "프로젝트-A",
+  description: "A 프로젝트 전용",
+  channel_type: "general",
+});
+
+// 수정 / 삭제
+await bot.updateChannel(ch.id, { name: "새이름" });
+await bot.deleteChannel(channelId);
+
+// 참여 / 나가기
+await bot.joinChannel(channelId);
+await bot.leaveChannel(channelId);
+
+// 멤버 관리
+await bot.addChannelMember(channelId, userId);
+await bot.removeChannelMember(channelId, userId);
+```
+
+### DM 관리
+
+```typescript
+// DM 방 생성 (1:1 또는 그룹)
+const dm = await bot.createDMRoom({ user_ids: [userA, userB] });
+
+// DM 방 목록
+const rooms = await bot.listDMRooms();
+
+// DM 메시지 전송 / 조회
+await bot.sendDMMessage(dm.id, "안녕하세요");
+const msgs = await bot.listDMMessages(dm.id, { limit: 20 });
+
+// 방 나가기
+await bot.leaveDMRoom(dm.id);
+```
+
+### Topic / Project
+
+```typescript
+// 프로젝트 목록 / 상세
+const projects = await bot.listProjects({ status: "active" });
+const proj = await bot.getProject(projectId);
+
+// 토픽 목록
+const topics = await bot.listTopics(projectId);
+
+// 토픽 상태 변경 (active | completed | archived)
+await bot.updateTopicStatus(topicId, "completed");
+
+// 토픽 삭제 (이름 확인 필수)
+await bot.deleteTopic(topicId, "토픽이름");
+```
+
+### User / Organization
+
+```typescript
+// 현재 봇의 인증 컨텍스트
+const me = await bot.getMe();
+
+// 부서 목록
+const departments = await bot.listDepartments();
+```
+
+### 알림
+
+```typescript
+// 알림 목록 (읽지 않은 것만)
+const notifs = await bot.listNotifications({ unread_only: true, limit: 20 });
+
+// 읽음 처리
+await bot.markNotificationRead(notifId);
+
+// 읽지 않은 알림 수
+const { count } = await bot.getUnreadCount();
+```
+
 ## MCP 도구 직접 호출
 
 SDK의 편의 메서드 외에 MCP 도구를 직접 호출할 수도 있습니다:
@@ -292,14 +467,14 @@ try {
 ```bash
 mkdir echo-bot && cd echo-bot
 npm init -y
-npm install @workhub/bot-sdk
+npm install workhub-bot-sdk
 ```
 
 ### echo-bot.ts
 
 ```typescript
-import { WorkhubBot, WebhookServer } from "@workhub/bot-sdk";
-import type { WebhookEvent } from "@workhub/bot-sdk";
+import { WorkhubBot, WebhookServer } from "workhub-bot-sdk";
+import type { WebhookEvent } from "workhub-bot-sdk";
 
 // 1. 봇 클라이언트 — Workhub API 호출용
 const bot = new WorkhubBot({
@@ -380,14 +555,14 @@ Echo 봇: Webhook 수신
 ```bash
 mkdir summary-bot && cd summary-bot
 npm init -y
-npm install @workhub/bot-sdk openai
+npm install workhub-bot-sdk openai
 ```
 
 ### summary-bot.ts
 
 ```typescript
-import { WorkhubBot, WebhookServer } from "@workhub/bot-sdk";
-import type { WebhookEvent } from "@workhub/bot-sdk";
+import { WorkhubBot, WebhookServer } from "workhub-bot-sdk";
+import type { WebhookEvent } from "workhub-bot-sdk";
 import OpenAI from "openai";
 
 // ─── 설정 ───
@@ -660,7 +835,7 @@ npx tsx summary-bot.ts
 MCP 도구를 활용한 간단한 스크립트 예제입니다.
 
 ```typescript
-import { WorkhubBot } from "@workhub/bot-sdk";
+import { WorkhubBot } from "workhub-bot-sdk";
 
 const bot = new WorkhubBot({
   baseUrl: "http://localhost:8080",

@@ -123,8 +123,8 @@ SDK에 내장된 Webhook 서버를 사용하면 서명 검증이 자동으로 �
 ::: code-group
 
 ```typescript [TypeScript]
-import { WebhookServer } from "@workhub/bot-sdk";
-import type { WebhookEvent } from "@workhub/bot-sdk";
+import { WebhookServer } from "workhub-bot-sdk";
+import type { WebhookEvent } from "workhub-bot-sdk";
 
 const webhook = new WebhookServer({
   port: 9000,

@@ -7,7 +7,7 @@ Workhub은 외부 시스템 연동 및 자동화를 위한 **MCP 서버**, **Bot
 | 구성 요소 | 설명 | 패키지 |
 |-----------|------|--------|
 | [MCP 서버](./mcp-server) | Model Context Protocol 기반 도구 서버 (JSON-RPC 2.0) | - |
-| [TypeScript SDK](./sdk-typescript) | Node.js 봇 개발용 SDK | `npm install @workhub/bot-sdk` |
+| [TypeScript SDK](./sdk-typescript) | Node.js 봇 개발용 SDK | [`npm install workhub-bot-sdk`](https://www.npmjs.com/package/workhub-bot-sdk) |
 | [Python SDK](./sdk-python) | Python 봇 개발용 SDK | [`pip install workhub-bot-sdk`](https://pypi.org/project/workhub-bot-sdk/) |
 | [API 레퍼런스](./api-reference) | MCP 도구 및 REST API 전체 명세 | - |
 | [Webhook](./webhook) | 이벤트 수신 및 실시간 연동 | - |
@@ -55,7 +55,7 @@ Workhub에는 세 가지 봇 유형이 있습니다:
 ::: code-group
 
 ```bash [TypeScript]
-npm install @workhub/bot-sdk
+npm install workhub-bot-sdk
 ```
 
 ```bash [Python]
@@ -69,7 +69,7 @@ pip install workhub-bot-sdk
 ::: code-group
 
 ```typescript [TypeScript]
-import { WorkhubBot } from "@workhub/bot-sdk";
+import { WorkhubBot } from "workhub-bot-sdk";
 
 const bot = new WorkhubBot({
   baseUrl: "https://workhub.example.com",

@@ -3,7 +3,7 @@
 `workhub_bot_sdk`는 Python 환경에서 Workhub 봇을 개발하기 위한 공식 SDK입니다.
 
 - **PyPI**: [workhub-bot-sdk](https://pypi.org/project/workhub-bot-sdk/)
-- **버전**: 0.1.0
+- **최신 버전**: 0.2.0
 - **라이선스**: MIT
 
 ## 설치
@@ -149,25 +149,50 @@ bot.upload_file("./report.pdf", message_id="메시지-UUID")
 bot.download_file("파일-UUID", dest_path="./downloaded.pdf")
 ```
 
-## 봇 커스텀 명령
+## 봇 커스텀 명령 (슬래시 커맨드)
+
+봇이 자신의 슬래시 명령을 자가 등록/조회/삭제할 수 있습니다. 이 API는 Workhub UI의 `/` 자동완성 팔레트에 직접 반영됩니다.
+
+**필요한 scope**
+- `bots:commands:read` — 조회
+- `bots:commands:write` — 등록·삭제
+
+**제한**
+- 봇은 **자신의 명령만** 관리할 수 있습니다. 다른 봇의 `bot_id`로 호출하면 `403 Forbidden` 반환.
+- `bot_id` 대신 `"self"` 를 전달하면 SDK가 자동으로 인증된 봇의 UUID를 조회하여 치환합니다.
 
 ```python
-# 봇 정보 조회
-info = bot.authenticate()
-
-# 커스텀 명령 등록
+# 커스텀 명령 등록 (self 사용 권장)
 cmd = bot.create_bot_command(
-    info.bot_id,
-    command="deploy",
-    description="프로덕션 배포를 실행합니다",
+    "self",                             # 또는 info.bot_id
+    "deploy",
+    "프로덕션 배포를 실행합니다",
     usage_hint="/deploy [branch]",
 )
 
 # 등록된 명령 목록
-commands = bot.list_bot_commands(info.bot_id)
+commands = bot.list_bot_commands("self")
 
 # 명령 삭제
-bot.delete_bot_command(info.bot_id, "deploy")
+bot.delete_bot_command("self", "deploy")
+```
+
+**일괄 등록 예시 (부팅 시)**
+
+```python
+COMMANDS = [
+    ("weekly-preview",  "주간업무 취합 보고서",     "/weekly-preview"),
+    ("weekly-reset",    "이번 주 주간업무 초기화",   "/weekly-reset [YYYY-Www]"),
+    ("my-tasks",        "내 배정 업무",             "/my-tasks"),
+]
+
+for cmd_name, desc, hint in COMMANDS:
+    try:
+        bot.create_bot_command("self", cmd_name, desc, usage_hint=hint)
+    except WorkhubBotError as e:
+        # 이미 존재하면 무시 (409), 그 외는 로그
+        if e.status != 409:
+            log.warning("command register failed: %s → %s", cmd_name, e)
 ```
 
 ## 채널 북마크
@@ -228,6 +253,150 @@ result = bot.execute_slash_command(
     channel_id="채널-UUID",
 )
 print(result.text)
+```
+
+## v0.2.0 신규 API (36개)
+
+### 메시지 고급 기능
+
+```python
+# 메시지 편집 (자기 자신이 보낸 것만, messages:write 필요)
+bot.update_message(message_id, "수정된 내용")
+bot.update_message(message_id, "본문", content_html="<p>본문</p>")
+
+# 메시지 삭제 (soft delete — deleted_at 세팅, 이벤트 브로드캐스트)
+bot.delete_message(message_id)
+
+# 반응 추가/제거/조회
+bot.add_reaction(message_id, "👍")
+bot.remove_reaction(message_id, "👍")
+reactions = bot.get_reactions(message_id)
+
+# 메시지 고정
+bot.pin_message(message_id)
+bot.unpin_message(message_id)
+
+# 스레드 답글 조회
+replies = bot.list_thread(message_id)
+```
+
+::: warning 메시지 편집/삭제 제한
+봇은 **자기가 보낸 메시지만** 편집하거나 삭제할 수 있습니다. 다른 봇/사용자 메시지에 시도 시 `403 Forbidden` 반환. `messages:write` scope 필요.
+:::
+
+### 태스크 고급 기능
+
+```python
+# 상태 변경 (todo | in_progress | review | done)
+bot.update_task_status(task_id, "done")
+
+# 선행 태스크
+bot.set_task_dependencies(task_id, [prereq1, prereq2])
+
+# 담당자 관리
+bot.add_task_assignee(task_id, user_id)
+bot.remove_task_assignee(task_id, user_id)
+
+# 태스크 삭제
+bot.delete_task(task_id)
+```
+
+### 작업일지 (Work Log)
+
+```python
+# 작업일지 기록
+bot.create_work_log(
+    task_id=task_id,
+    work_date="2026-04-18",
+    start_time="09:00",
+    end_time="18:00",
+    memo="구현 완료",
+)
+
+# 날짜 범위로 조회
+logs = bot.list_work_logs(from_date="2026-04-01", to_date="2026-04-30")
+
+# 삭제
+bot.delete_work_log(work_log_id)
+```
+
+### 채널 관리
+
+```python
+# 채널 생성
+ch = bot.create_channel(
+    name="프로젝트-A",
+    description="A 프로젝트 전용",
+    channel_type="general",
+)
+
+# 수정 / 삭제
+bot.update_channel(ch["id"], name="새이름")
+bot.delete_channel(channel_id)
+
+# 참여 / 나가기
+bot.join_channel(channel_id)
+bot.leave_channel(channel_id)
+
+# 멤버 관리
+bot.add_channel_member(channel_id, user_id)
+bot.remove_channel_member(channel_id, user_id)
+```
+
+### DM 관리
+
+```python
+# DM 방 생성 (1:1 또는 그룹)
+dm = bot.create_dm_room([user_a, user_b])
+
+# 목록 / 메시지
+rooms = bot.list_dm_rooms()
+bot.send_dm_message(dm["id"], "안녕하세요")
+msgs = bot.list_dm_messages(dm["id"], limit=20)
+
+# 방 나가기
+bot.leave_dm_room(dm["id"])
+```
+
+### Topic / Project
+
+```python
+# 프로젝트 목록 / 상세
+projects = bot.list_projects(status="active")
+proj = bot.get_project(project_id)
+
+# 토픽 목록
+topics = bot.list_topics(project_id)
+
+# 토픽 상태 변경 (active | completed | archived)
+bot.update_topic_status(topic_id, "completed")
+
+# 토픽 삭제 (이름 확인 필수)
+bot.delete_topic(topic_id, "토픽이름")
+```
+
+### User / Organization
+
+```python
+# 현재 봇의 인증 컨텍스트
+me = bot.get_me()
+
+# 부서 목록
+departments = bot.list_departments()
+```
+
+### 알림
+
+```python
+# 알림 목록 (읽지 않은 것만)
+notifs = bot.list_notifications(unread_only=True, limit=20)
+
+# 읽음 처리
+bot.mark_notification_read(notif_id)
+
+# 읽지 않은 알림 수
+result = bot.get_unread_count()
+print(result["count"])
 ```
 
 ## MCP 도구 직접 호출
