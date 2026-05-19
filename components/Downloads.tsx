@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 
 const ANDROID_URL =
   "https://github.com/getorey/workhub-landing/releases/download/v0.1.0-android/workhub-android-debug-latest.apk";
-const IOS_TESTFLIGHT_URL = "https://testflight.apple.com/join/HQ8YNMEc";
+// #312 — App Store 정식 출시 (id6768186636). TestFlight URL 제거.
+const IOS_APP_STORE_URL = "https://apps.apple.com/kr/app/workhub/id6768186636";
 const WINDOWS_EXE_URL =
   "https://github.com/getorey/workhub-landing/releases/download/v0.1.0-windows/workhub-windows-installer-latest.exe";
 
@@ -22,7 +23,7 @@ interface DownloadItem {
 const items: DownloadItem[] = [
   {
     name: "Android",
-    badge: "APK (debug)",
+    badge: "APK",
     description:
       "스마트폰 / 태블릿용 Workhub 앱. APK 설치 시 \"알 수 없는 출처 허용\" 이 필요할 수 있습니다.",
     href: ANDROID_URL,
@@ -40,12 +41,11 @@ const items: DownloadItem[] = [
   },
   {
     name: "iOS",
-    badge: "TestFlight 베타",
+    badge: "App Store",
     description:
-      "iPhone / iPad 용 Workhub 베타. TestFlight 앱 (App Store 무료) 설치 후 자동 연결됩니다. iOS 13.0 이상.",
-    href: IOS_TESTFLIGHT_URL,
-    cta: "TestFlight 로 설치",
-    statusLabel: "Apple 베타 검토 중",
+      "iPhone / iPad 용 Workhub. App Store 에서 무료 다운로드. iOS 13.0 이상.",
+    href: IOS_APP_STORE_URL,
+    cta: "App Store 에서 설치",
     icon: (
       <svg
         className="h-10 w-10 text-gray-100"
@@ -160,7 +160,7 @@ export default function Downloads() {
 
         <p className="mt-8 text-center text-xs text-gray-500">
           Android / Windows: 항상 같은 URL — 최신 빌드 자동 갱신.<br className="sm:hidden" />
-          iOS: TestFlight 앱 (App Store) 설치 후 링크 자동 연결.
+          iOS: App Store 에서 무료 다운로드.
         </p>
       </div>
     </section>
