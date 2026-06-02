@@ -14,6 +14,7 @@
 8. [검색](./search.md) — 통합 검색
 9. [파일](./files.md) — 파일 업로드, 다운로드
 10. [봇 사용법](./bots.md) — 스탠드업, 태스크 알림, 투표/설문, 취합 봇
+11. [Claude / MCP 클라이언트 연결](./claude-mcp-integration.md) — Personal Access Token 발급, Claude Desktop / Claude Code 설정
 
 ## 계정 관리
 
