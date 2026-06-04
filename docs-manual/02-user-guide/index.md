@@ -17,6 +17,7 @@
 11. [Claude / MCP 클라이언트 연결](./claude-mcp-integration.md) — Personal Access Token 발급, Claude Desktop / Claude Code 설정
 12. [명함 → 내 핸드폰 연락처 동기화](./crm-phone-sync.md) — CRM 담당자를 본인 스마트폰 연락처로 (iOS / Android)
 13. [팝빌 연동 (세금계산서 + 입금내역)](./finance-popbill.md) — 매출 자동화 외부 연동 (기관관리자 자가 등록)
+14. [Gmail 모듈](./gmail-module.md) — 본인 Gmail 워크허브 통합 + 메일 분류 + Claude MCP 스킬로 자동 트리아지
 
 ## 계정 관리
 
