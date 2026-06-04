@@ -236,6 +236,7 @@ https://www.popbill.com → 회원가입 → **"사업자 회원"** 으로 가�
 
 ## 관련 가이드
 
-- 매출 자동화 — 입금 매칭 (별도 가이드 작성 예정)
-- 아임웹 주문 동기화 (별도 가이드 작성 예정)
-- [Claude / MCP 클라이언트 연결](./claude-mcp-integration.md) — Claude 에서 매출/세금계산서 조회
+- [재무 모듈 (관리자)](./modules-finance.md) — 재무관리 모듈 활성화 / 메뉴 노출 정책
+- [Claude / MCP 클라이언트 연결 (사용자 가이드)](../02-user-guide/claude-mcp-integration.md) — Claude 에서 매출/세금계산서 조회
+- 매출 자동화 — 입금 매칭 (작성 예정)
+- 아임웹 주문 동기화 (작성 예정)

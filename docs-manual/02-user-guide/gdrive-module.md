@@ -40,41 +40,12 @@
 
 ## 2. 사전 준비
 
-### 2.1 기관관리자 — 한 번만
+> 기관관리자가 먼저 **Google 모듈 + Drive 모듈** 을 활성화하고 Picker API Key 를 등록해야 합니다 —
+> [기관관리자 가이드 — Drive 모듈](../04-org-admin-guide/modules-gdrive.md) 참고.
 
-#### 1) Google 모듈 활성화
+활성화가 끝나면 메시지 첨부 / CRM 명함 인박스 / 미팅 트랜스크립트 등의 진입점이 노출됩니다.
 
-**기관 관리 → 모듈 → Google** 에서:
-
-- Google OAuth Client 등록 (Workspace 콘솔에서 client_id/client_secret 발급 후 입력)
-- redirect URI: `https://workhub.koavio.com/api/modules/google/oauth/callback`
-- AES-GCM 암호화로 저장 — 시스템관리자도 평문 조회 불가
-
-자세한 절차: 기관관리자 가이드 (`docs/manual/04-org-admin-guide`).
-
-#### 2) Drive 모듈 활성화 + 설정
-
-같은 화면에서 **"드라이브"** 모듈 ON → 우측 설정 패널 열림:
-
-| 항목 | 입력 |
-|---|---|
-| **공유 드라이브 ID** | 회사 공유 드라이브를 쓰면 ID 입력 (Drive URL 의 `/drive/folders/XXX` 의 XXX). 비우면 본인 마이드라이브 사용 |
-| **Google Picker API Key** | Google Cloud Console → API 및 서비스 → 사용자 인증 정보 → "API 키" 발급 (제한 권장: Picker API + workhub.koavio.com 만) |
-| **메시지 첨부 시 자동 권한 부여** (`grant_on_send`) | ✅ ON 권장 — 본인이 Drive 첨부한 파일을 수신자가 클릭하면 자동 권한 부여 |
-
-저장 후:
-- 좌측 사이드바에 Drive 관련 진입점이 노출됨 (메시지 첨부 버튼 / CRM 명함 인박스 등)
-
-#### 3) 모듈 의존성
-
-| 모듈 | 의존 |
-|---|---|
-| **Gmail** | Google + Drive (첨부 → Drive 저장 시) |
-| **CRM** (명함 OCR · 미팅 트랜스크립트) | Google + Drive (이미지·텍스트 Drive 인박스 사용 시) |
-
-→ Drive 가 꺼져있으면 위 흐름들이 "파일에서 가져오기" 등 로컬 fallback 으로 자동 전환.
-
-### 2.2 본인 사용자 — 한 번만
+### 본인 사용자 — 한 번만
 
 기관관리자가 Drive 모듈을 활성한 후, 본인이 처음 Drive 첨부를 누르면:
 
@@ -207,12 +178,11 @@ Gmail 모듈에서 받은 메일의 첨부 (영수증 / 견적서 / 인보이스
 
 ### Q. 공유 드라이브 안 쓰고 본인 마이드라이브로만 운영해도 되나요?
 
-가능합니다. Drive 모듈 설정의 "공유 드라이브 ID" 를 비워두면 본인 마이드라이브가 사용됩니다.
-단점:
+가능합니다. 단점:
 - 본인이 퇴사하면 본인 드라이브 자료가 사라짐 (회사가 백업할 수 없음)
 - 같은 채널의 다른 사람이 본인 드라이브 파일을 보려면 grant 가 필요 (Drive 모듈이 자동 처리하지만)
 
-회사 자료의 영속성/공유성을 위해 **공유 드라이브 권장**.
+회사 자료의 영속성/공유성을 위해 **공유 드라이브 권장** — 기관관리자가 모듈 설정에서 지정.
 
 ### Q. Drive 콘솔에서 직접 권한 추가하면 워크허브에 영향이 있나요?
 
@@ -251,19 +221,6 @@ Drive 자체 한도 (Workspace 플랜에 따른 GB) 만 적용.
 
 ## 8. 트러블슈팅
 
-### "Picker API Key 미설정"
-
-기관관리자가 Drive 모듈 설정에서 Picker API Key 입력 필요.
-
-발급 절차:
-1. Google Cloud Console → 본인 프로젝트 (Workspace 와 같은 프로젝트 권장) → **API 및 서비스 → 라이브러리**
-2. **"Google Picker API"** 검색 → 활성화
-3. **API 및 서비스 → 사용자 인증 정보 → "API 키"** 생성
-4. 키 제한 권장:
-   - **HTTP 리퍼러 제한**: `https://workhub.koavio.com/*`
-   - **API 제한**: Google Picker API 만
-5. 워크허브 Drive 모듈 설정에 입력 후 저장
-
 ### "본인 Google 계정 권한 만료"
 
 본인이 https://myaccount.google.com/permissions 에서 워크허브 권한을 회수했거나 토큰이 만료된 경우.
@@ -295,24 +252,10 @@ Drive 자체 한도 (Workspace 플랜에 따른 GB) 만 적용.
 
 ---
 
-## 10. 운영자 (시스템관리자) 참고
-
-워크허브 운영자가 1회 세팅:
-
-| 환경변수 | 목적 |
-|---|---|
-| `GOOGLE_TOKEN_ENC_KEY` | Google OAuth 토큰 AES-GCM 마스터 키 — 미설정 시 Google 관련 모듈 전체 비활성 |
-
-기관관리자 입력 항목 (운영자 무관):
-- Google OAuth Client ID/Secret
-- 공유 드라이브 ID
-- Picker API Key
-
----
-
 ## 관련 가이드
 
 - [Gmail 모듈](./gmail-module.md) — 메일 첨부를 Drive 로 저장
 - [메시지](./messaging.md) — 채널/토픽 메시징 (Drive 첨부 포함)
 - [파일](./files.md) — 파일 탭 일반 사용법
 - [Claude / MCP 클라이언트 연결](./claude-mcp-integration.md) — Claude 에서 Drive 첨부 자동화
+- [기관관리자 가이드 — Drive 모듈](../04-org-admin-guide/modules-gdrive.md) — 모듈 활성화 / Picker API Key / 공유 드라이브

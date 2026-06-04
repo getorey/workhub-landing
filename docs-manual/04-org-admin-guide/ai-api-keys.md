@@ -260,7 +260,7 @@ CRM 명함 OCR 등을 시도했는데 이 메시지가 뜨면 → 위 3.2 단계
 
 ## 관련 가이드
 
-- [AI 명령어](./ai-commands.md) — AI 슬래시 명령 사용법 (`/ai`, `/요약`, `/번역` 등)
-- [Gmail 모듈](./gmail-module.md) — 메일 분류 (Claude MCP 스킬 사용 — 별개 AI)
-- [Claude / MCP 클라이언트 연결](./claude-mcp-integration.md) — Claude 측 자동화
-- [CRM 가이드](./crm-phone-sync.md) (관련 항목)
+- [AI 명령어 (사용자 가이드)](../02-user-guide/ai-commands.md) — AI 슬래시 명령 사용법 (`/ai`, `/요약`, `/번역` 등)
+- [CRM 모듈 (관리자)](./modules-crm.md) — 명함 OCR · 미팅 요약이 이 키를 사용
+- [Gmail 모듈 (관리자)](./modules-gmail.md) — 메일 모듈 활성화 / OAuth scope
+- [Claude / MCP 클라이언트 연결 (사용자 가이드)](../02-user-guide/claude-mcp-integration.md) — Claude 측 자동화 (별개 AI)

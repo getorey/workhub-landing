@@ -12,16 +12,12 @@
 
 ## 1. 사전 준비
 
-### 1) 기관관리자 — Google 모듈 등록 (1회)
+> 기관관리자가 먼저 **Google 모듈 + Gmail 모듈** 을 활성화해야 합니다 —
+> [기관관리자 가이드 — Gmail 모듈](../04-org-admin-guide/modules-gmail.md) 참고.
 
-기관관리자가 **기관 관리 → 모듈 → Google** 에서:
+활성화가 끝나면 좌측 사이드바에 **"메일"** 메뉴가 노출됩니다.
 
-- ✅ Google 모듈 활성화 (Workspace OAuth Client 등록 — `docs/04-org-admin-guide` 참고)
-- ✅ Gmail 모듈 활성화 (위 Google 모듈에 의존)
-
-→ 활성화하면 좌측 사이드바에 **"메일"** 메뉴가 노출됩니다.
-
-### 2) 본인 — Google 계정 연결 (사용자 1회)
+### 본인 Google 계정 연결 (사용자 1회)
 
 좌측 사이드바 **메일** → 화면 상단의 **"Google 계정 연결"** 클릭:
 
@@ -336,5 +332,6 @@ DB 접근으로는 본인 메일 본문에 평문으로 접근하지 못합니�
 
 - [Claude / MCP 클라이언트 연결](./claude-mcp-integration.md) — Claude Desktop / Code 설정
 - [AI 명령어](./ai-commands.md) — 워크허브 슬래시 명령
-- [팝빌 연동](./finance-popbill.md) — 영수증 메일 → 세금계산서 흐름
+- [Google Drive 모듈](./gdrive-module.md) — 메일 첨부를 Drive 로 저장
 - [태스크](./tasks.md) — 메일에서 생성된 태스크 관리
+- [기관관리자 가이드 — Gmail 모듈](../04-org-admin-guide/modules-gmail.md) — 모듈 활성화 / OAuth scope / 운영

@@ -16,10 +16,9 @@
 10. [봇 사용법](./bots.md) — 스탠드업, 태스크 알림, 투표/설문, 취합 봇
 11. [Claude / MCP 클라이언트 연결](./claude-mcp-integration.md) — Personal Access Token 발급, Claude Desktop / Claude Code 설정
 12. [명함 → 내 핸드폰 연락처 동기화](./crm-phone-sync.md) — CRM 담당자를 본인 스마트폰 연락처로 (iOS / Android)
-13. [팝빌 연동 (세금계산서 + 입금내역)](./finance-popbill.md) — 매출 자동화 외부 연동 (기관관리자 자가 등록)
-14. [Gmail 모듈](./gmail-module.md) — 본인 Gmail 워크허브 통합 + 메일 분류 + Claude MCP 스킬로 자동 트리아지
-15. [Google Drive 모듈](./gdrive-module.md) — 메시지/CRM/Gmail 첨부의 Drive 원본 통합 + 자동 권한 관리
-16. [AI API 키 설정](./ai-api-keys.md) — Gemini API 키 발급 + 워크허브 등록 (명함 OCR · 미팅 요약 · AI 명령)
+13. [Gmail 모듈](./gmail-module.md) — 본인 Gmail 워크허브 통합 + 메일 분류 + Claude MCP 스킬로 자동 트리아지
+14. [Google Drive 모듈](./gdrive-module.md) — 메시지/CRM/Gmail 첨부의 Drive 원본 통합 + 자동 권한 관리
+15. [AI 명령어](./ai-commands.md) — 워크허브 슬래시 명령 (`/ai`, `/요약`, `/번역` 등)
 
 ## 계정 관리
 
