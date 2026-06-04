@@ -19,6 +19,7 @@
 13. [팝빌 연동 (세금계산서 + 입금내역)](./finance-popbill.md) — 매출 자동화 외부 연동 (기관관리자 자가 등록)
 14. [Gmail 모듈](./gmail-module.md) — 본인 Gmail 워크허브 통합 + 메일 분류 + Claude MCP 스킬로 자동 트리아지
 15. [Google Drive 모듈](./gdrive-module.md) — 메시지/CRM/Gmail 첨부의 Drive 원본 통합 + 자동 권한 관리
+16. [AI API 키 설정](./ai-api-keys.md) — Gemini API 키 발급 + 워크허브 등록 (명함 OCR · 미팅 요약 · AI 명령)
 
 ## 계정 관리
 
