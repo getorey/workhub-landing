@@ -1,0 +1,19 @@
+<svg width="1600" height="400" viewBox="0 0 1600 400" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Workhub horizontal lockup">
+  <title>Workhub — Horizontal Lockup (Color)</title>
+  <defs>
+    <linearGradient id="hSymbol" x1="60" y1="100" x2="380" y2="320" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2B7BF0"/>
+      <stop offset="1" stop-color="#0B4FCC"/>
+    </linearGradient>
+    <linearGradient id="hText" x1="430" y1="120" x2="1500" y2="320" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1858C4"/>
+      <stop offset="1" stop-color="#093BA0"/>
+    </linearGradient>
+  </defs>
+  <!-- Symbol scaled into 320×320 area on the left -->
+  <g transform="translate(40 40) scale(0.3125)">
+    <path d="M120 290L380 800L512 478L644 800L904 290" stroke="url(#hSymbol)" stroke-width="148" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  <!-- Wordmark -->
+  <text x="430" y="278" font-family="Inter, Pretendard, 'SF Pro Display', system-ui, -apple-system, sans-serif" font-weight="800" font-size="240" letter-spacing="-12" fill="url(#hText)">workhub</text>
+</svg>
