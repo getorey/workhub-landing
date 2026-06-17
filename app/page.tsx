@@ -23,7 +23,7 @@ export default function Home() {
                                     className="h-full w-full object-cover opacity-60 blur-[1px]"
                                   />
                         <div className="absolute inset-0 bg-gray-950/40" />
-                </div>div>
+                </div>
           
                 <Navbar />
                 <main>
@@ -36,8 +36,8 @@ export default function Home() {
                         <Pricing />
                         <Downloads />
                         <CTA />
-                </main>main>
+                </main>
                 <Footer />
-          </>>
+          </>
         );
-}</>
+}
