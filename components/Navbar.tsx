@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const basePath = process.env.NODE_ENV === "production" ? "/workhub-landing" : "";
-
 const links = [
   { label: "강점", href: "#features" },
   { label: "기능", href: "#bots" },
@@ -12,92 +10,92 @@ const links = [
   { label: "기술", href: "#tech" },
   { label: "보안", href: "#security" },
   { label: "가격", href: "#pricing" },
-  { label: "문서", href: `${basePath}/docs/` },
-];
+  { label: "문서", href: "/docs/" },
+  ];
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-gray-950/80 backdrop-blur-md">
-      <div className="section-container flex h-16 items-center justify-between">
-        <a href="#" className="flex items-center" aria-label="Workhub">
-          {/* Issue #208 — brand-kit horizontal lockup (mono white for dark nav) */}
-          <img
-            src={`${basePath}/brand-lockup-horizontal-white.svg`}
-            alt="Workhub"
-            className="h-7 w-auto"
-          />
-        </a>
-
-        {/* Desktop */}
-        <div className="hidden items-center gap-8 md:flex">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="text-sm text-gray-400 transition hover:text-white"
-            >
-              {l.label}
-            </a>
-          ))}
-        </div>
-
-        {/* Mobile toggle */}
-        <button
-          className="md:hidden"
-          onClick={() => setOpen(!open)}
-          aria-label="메뉴 토글"
-        >
-          <svg
-            className="h-6 w-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            {open ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
-        </button>
-      </div>
-
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-white/10 md:hidden"
-          >
-            <div className="section-container flex flex-col gap-4 py-4">
-              {links.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  className="text-sm text-gray-400 transition hover:text-white"
-                >
-                  {l.label}
-                </a>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
-  );
-}
+        <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-gray-950/80 backdrop-blur-md">
+              <div className="section-container flex h-16 items-center justify-between">
+                      <a href="#" className="flex items-center" aria-label="Workhub">
+                        {/* Issue #208 — brand-kit horizontal lockup (mono white for dark nav) */}
+                                <img
+                                              src="/brand-lockup-horizontal-white.svg"
+                                              alt="Workhub"
+                                              className="h-7 w-auto"
+                                            />
+                      </a>a>
+              
+                {/* Desktop */}
+                      <div className="hidden items-center gap-8 md:flex">
+                        {links.map((l) => (
+                      <a
+                                      key={l.href}
+                                      href={l.href}
+                                      className="text-sm text-gray-400 transition hover:text-white"
+                                    >
+                        {l.label}
+                      </a>a>
+                    ))}
+                      </div>div>
+              
+                {/* Mobile toggle */}
+                      <button
+                                  className="md:hidden"
+                                  onClick={() => setOpen(!open)}
+                                  aria-label="메뉴 토글"
+                                >
+                                <svg
+                                              className="h-6 w-6"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              viewBox="0 0 24 24"
+                                            >
+                                  {open ? (
+                                                            <path
+                                                                              strokeLinecap="round"
+                                                                              strokeLinejoin="round"
+                                                                              strokeWidth={2}
+                                                                              d="M6 18L18 6M6 6l12 12"
+                                                                            />
+                                                          ) : (
+                                                            <path
+                                                                              strokeLinecap="round"
+                                                                              strokeLinejoin="round"
+                                                                              strokeWidth={2}
+                                                                              d="M4 6h16M4 12h16M4 18h16"
+                                                                            />
+                                                          )}
+                                </svg>svg>
+                      </button>button>
+              </div>div>
+        
+          {/* Mobile menu */}
+              <AnimatePresence>
+                {open && (
+                    <motion.div
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: "auto", opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  className="overflow-hidden border-t border-white/10 md:hidden"
+                                >
+                                <div className="section-container flex flex-col gap-4 py-4">
+                                  {links.map((l) => (
+                                                  <a
+                                                                      key={l.href}
+                                                                      href={l.href}
+                                                                      onClick={() => setOpen(false)}
+                                                                      className="text-sm text-gray-400 transition hover:text-white"
+                                                                    >
+                                                    {l.label}
+                                                  </a>a>
+                                                ))}
+                                </div>div>
+                    </motion.div>motion.div>
+                  )}
+              </AnimatePresence>AnimatePresence>
+        </nav>nav>
+      );
+}</nav>
