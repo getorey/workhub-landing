@@ -39,7 +39,7 @@ export default function RootLayout({
 }>) {
     return (
           <html lang="ko" className="scroll-smooth">
-                <body className={`${geistSans.variable} font-sans`}>{children}</body>body>
-          </html>html>
+                <body className={`${geistSans.variable} font-sans`}>{children}</body>
+          </html>
         );
-}</html>
+}
