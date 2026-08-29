@@ -2,8 +2,10 @@
 
 import { motion } from "framer-motion";
 
+// Google Play 정식 출시 (com.koavio.workhub). APK 사이드로딩 → 스토어 링크 전환.
+// pcampaignid=web_share 는 웹 공유 유입 트래킹 파라미터 (Play Console 통계용).
 const ANDROID_URL =
-  "https://github.com/getorey/workhub-landing/releases/download/v0.1.0-android/workhub-android-debug-latest.apk";
+  "https://play.google.com/store/apps/details?id=com.koavio.workhub&pcampaignid=web_share";
 // #312 — App Store 정식 출시 (id6768186636). TestFlight URL 제거.
 const IOS_APP_STORE_URL = "https://apps.apple.com/kr/app/workhub/id6768186636";
 const WINDOWS_EXE_URL =
@@ -23,11 +25,11 @@ interface DownloadItem {
 const items: DownloadItem[] = [
   {
     name: "Android",
-    badge: "APK",
+    badge: "Google Play",
     description:
-      "스마트폰 / 태블릿용 Workhub 앱. APK 설치 시 \"알 수 없는 출처 허용\" 이 필요할 수 있습니다.",
+      "스마트폰 / 태블릿용 Workhub. Google Play 에서 무료 다운로드. Android 5.0 이상.",
     href: ANDROID_URL,
-    cta: "Android APK 다운로드",
+    cta: "Google Play 에서 설치",
     icon: (
       <svg
         className="h-10 w-10 text-emerald-400"
@@ -159,8 +161,8 @@ export default function Downloads() {
         </motion.div>
 
         <p className="mt-8 text-center text-xs text-gray-500">
-          Android / Windows: 항상 같은 URL — 최신 빌드 자동 갱신.<br className="sm:hidden" />
-          iOS: App Store 에서 무료 다운로드.
+          Android / iOS: 스토어에서 무료 다운로드 (자동 업데이트).<br className="sm:hidden" />
+          Windows: 항상 같은 URL — 최신 빌드 자동 갱신.
         </p>
       </div>
     </section>
