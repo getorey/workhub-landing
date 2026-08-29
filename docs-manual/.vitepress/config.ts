@@ -4,7 +4,7 @@ export default defineConfig({
   title: 'Workhub 도움말',
   description: 'Workhub 업무협업 플랫폼 사용자 매뉴얼',
   lang: 'ko-KR',
-  base: '/workhub-landing/docs/',
+  base: '/docs/',
 
   head: [
     ['meta', { name: 'theme-color', content: '#3b82f6' }],
@@ -16,6 +16,8 @@ export default defineConfig({
     siteTitle: 'Workhub 도움말',
 
     nav: [
+      // 랜딩 페이지로 돌아가기 — base(/workhub-landing/docs/) 외부 절대 경로 사용.
+      { text: '← Workhub 홈', link: 'http://workhub-landing.koavio.com/' },
       { text: '시작하기', link: '/01-getting-started/' },
       { text: '사용자 가이드', link: '/02-user-guide/' },
       {
@@ -61,6 +63,15 @@ export default defineConfig({
             { text: '봇 사용법', link: '/02-user-guide/bots' },
           ],
         },
+        {
+          text: '연동',
+          items: [
+            { text: 'Gmail 모듈', link: '/02-user-guide/gmail-module' },
+            { text: 'Google Drive 모듈', link: '/02-user-guide/gdrive-module' },
+            { text: '명함 연락처 동기화', link: '/02-user-guide/crm-phone-sync' },
+            { text: 'Claude / MCP 연결', link: '/02-user-guide/claude-mcp-integration' },
+          ],
+        },
       ],
       '/03-dept-admin-guide/': [
         {
@@ -81,9 +92,26 @@ export default defineConfig({
             { text: '사용자 관리', link: '/04-org-admin-guide/users' },
             { text: '부서 관리', link: '/04-org-admin-guide/departments' },
             { text: '봇 관리', link: '/04-org-admin-guide/bots' },
+            { text: '태스크 관리', link: '/04-org-admin-guide/tasks' },
+            { text: '보관함', link: '/04-org-admin-guide/archives' },
+            { text: '외부 링크 관리', link: '/04-org-admin-guide/external-links' },
             { text: '조직 설정', link: '/04-org-admin-guide/settings' },
             { text: '보안 설정', link: '/04-org-admin-guide/security' },
+            { text: 'SSO 연동 설정', link: '/04-org-admin-guide/sso' },
             { text: '감사 로그', link: '/04-org-admin-guide/audit' },
+          ],
+        },
+        {
+          text: '모듈 · 연동 설정',
+          items: [
+            { text: '구글 연동 (OAuth 설정)', link: '/04-org-admin-guide/google-integration' },
+            { text: 'Gmail 모듈', link: '/04-org-admin-guide/modules-gmail' },
+            { text: 'Google Drive 모듈', link: '/04-org-admin-guide/modules-gdrive' },
+            { text: 'CRM 모듈', link: '/04-org-admin-guide/modules-crm' },
+            { text: '재무 모듈', link: '/04-org-admin-guide/modules-finance' },
+            { text: 'MCP (Claude 연결)', link: '/04-org-admin-guide/modules-mcp' },
+            { text: 'AI API 키 설정', link: '/04-org-admin-guide/ai-api-keys' },
+            { text: '팝빌 연동', link: '/04-org-admin-guide/finance-popbill' },
           ],
         },
       ],
@@ -99,6 +127,7 @@ export default defineConfig({
             { text: '모니터링', link: '/05-deployment-guide/monitoring' },
             { text: '백업 및 복구', link: '/05-deployment-guide/backup' },
             { text: '데스크톱 앱 빌드', link: '/05-deployment-guide/desktop' },
+            { text: '매뉴얼 · 랜딩 배포', link: '/05-deployment-guide/manual-deploy' },
           ],
         },
       ],

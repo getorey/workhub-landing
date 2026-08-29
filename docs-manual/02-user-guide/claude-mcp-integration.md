@@ -59,9 +59,30 @@ macOS 는 `cmd+Q` (창 X 만으로는 부족). Activity Monitor 에서 Claude �
 
 ⏱ **1분 안에 동의 단계를 끝내야 합니다** (mcp-remote 의 timeout). 미리 로그인해두면 안전.
 
+### 토큰이 실제로 저장되는 곳 (로컬)
+
+OAuth 방식에서는 **`claude_desktop_config.json` 에 토큰이 들어 있지 않습니다.** 설정 파일에는 `mcp-remote` 로 원격 서버에 붙는 등록만 있고, 실제 토큰은 `mcp-remote` 가 별도 인증 캐시에 보관합니다:
+
+```
+~/.mcp-auth/mcp-remote-<버전>/<해시>_tokens.json
+```
+
+- 같은 폴더의 `_client_info.json`, `_code_verifier.txt` 는 OAuth 흐름용 보조 파일
+- `mcp-remote` 버전이 올라가면 **이전 버전 폴더가 그대로 남습니다** (예: `mcp-remote-0.1.27/` 와 `mcp-remote-0.1.37/` 공존) — 정리할 땐 `~/.mcp-auth` 전체를 지우는 게 확실
+- 이 파일은 자격증명입니다 — 백업/공유 대상에서 제외하세요
+
 ### OAuth 토큰 폐기
 
-워크허브 → 프로필 → MCP 토큰 → 이름이 `OAuth: wh-...` 인 항목을 폐기.
+토큰을 완전히 정리하려면 **서버측 폐기 + 로컬 캐시 삭제** 둘 다 필요합니다:
+
+1. 워크허브 → 프로필 → MCP 토큰 → 이름이 `OAuth: wh-...` 인 항목을 폐기 (서버측 무효화)
+2. 로컬 캐시 삭제:
+   ```bash
+   rm -rf ~/.mcp-auth
+   ```
+3. 다음 연결 때 `mcp-remote` 가 새로 OAuth 동의 화면을 띄웁니다 (재인증)
+
+서버측 폐기만 하면 로컬 캐시의 토큰 파일이 남고 (무효화돼서 동작은 안 함), 로컬 캐시만 지우면 서버에 토큰이 살아 있으므로 둘 다 처리하는 게 안전합니다.
 
 ---
 
@@ -177,6 +198,9 @@ PAT (Personal Access Token) 는 사용자가 손으로 발급해서 명령줄에
 - 토큰은 **암호와 동일한 보안 수준** 으로 다루세요
 - 평문으로 채팅 / 이메일 / 문서에 공유 금지
 - Git 저장소에 commit 금지
+- 로컬에 토큰이 저장되는 위치를 알아두세요 — 기기 양도/폐기 전 삭제 대상:
+  - OAuth (Claude Desktop): `~/.mcp-auth/` (mcp-remote 인증 캐시 — 버전별 폴더에 토큰 파일)
+  - PAT (Claude Code): `~/.claude/mcp.json` (Bearer 토큰이 **평문** 으로 들어감)
 
 ### 외부 공격면
 - 토큰 유출 시 → 워크허브 → 프로필 → MCP 토큰 → 해당 토큰 즉시 폐기

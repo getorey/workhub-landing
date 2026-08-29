@@ -10,8 +10,11 @@ Content-Type: application/json
 Authorization: Bearer {API_KEY}
 ```
 
-::: tip
-MCP 엔드포인트는 사용자 인증이 아닌 **봇 API 키**로 인증합니다. 봇 등록 후 발급받은 API 키를 사용하세요.
+::: tip 인증 방식 (둘 중 하나)
+- **개인 MCP 토큰 (권장)** — 내 프로필 → "Claude / MCP 연결"에서 발급한 Personal Access Token(JWT). 발급한 본인의 권한(RBAC)으로 동작합니다. Claude Desktop / Claude Code 등 개인 클라이언트 연동에 사용하세요.
+- **봇 API 키** — 봇 등록 후 발급한 키. 봇 scope 범위 내에서 동작합니다.
+
+`Authorization: Bearer <토큰>` 헤더로 전달합니다.
 :::
 
 ## 프로토콜
@@ -77,19 +80,94 @@ MCP 서버는 **JSON-RPC 2.0** 프로토콜을 사용하며, MCP 버전 `2025-03
 
 ## 제공 도구 (Tools)
 
-MCP 서버에서 제공하는 9개 도구입니다:
+MCP 서버는 **45개 도구**를 7개 영역으로 제공합니다. `tools/list` 로 현재 활성 목록을 동적 조회할 수 있으며, 각 도구는 호출 시 아래 Scope(또는 발급자 RBAC 권한)를 검증합니다.
+
+### 메시지 · 채널 · DM
 
 | 도구 | Scope | 설명 |
 |------|-------|------|
 | `send_message` | `messages:write` | 채널/토픽/DM에 메시지 전송 |
-| `read_messages` | `messages:read` | 최근 메시지 조회 |
+| `read_messages` | `messages:read` | 최근 메시지 조회 (최대 100) |
 | `list_channels` | `channels:read` | 채널/프로젝트/토픽 목록 |
-| `create_task` | `tasks:write` | 태스크 생성 |
-| `update_task` | `tasks:write` | 태스크 수정 |
-| `list_tasks` | `tasks:read` | 태스크 목록 조회 |
-| `search` | any | 통합 검색 |
-| `get_user_info` | `users:read` | 사용자 정보 조회 |
-| `list_users` | `users:read` | 사용자 목록 조회 |
+| `list_thread` | `messages:read` | 부모 메시지의 스레드 답글 목록 |
+| `add_reaction` | `reactions:write` | 메시지에 이모지 반응 추가 |
+| `remove_reaction` | `reactions:write` | 이모지 반응 제거 |
+| `pin_message` | `reactions:write` | 메시지 고정 |
+| `unpin_message` | `reactions:write` | 메시지 고정 해제 |
+
+### 태스크
+
+| 도구 | Scope | 설명 |
+|------|-------|------|
+| `create_task` | `tasks:write` | 토픽에 태스크 생성 |
+| `update_task` | `tasks:write` | 태스크 상태/정보 수정 |
+| `list_tasks` | `tasks:read` | 토픽의 태스크 목록 |
+| `create_task_from_email` | `tasks:write` | Gmail 메일을 소스로 태스크 생성 |
+
+### 사용자 · 검색 · 모듈
+
+| 도구 | Scope | 설명 |
+|------|-------|------|
+| `get_user_info` | `users:read` | 사용자 정보 조회 (ID/이메일) |
+| `list_users` | `users:read` | 조직 사용자 목록 |
+| `get_dm_room` | `messages:write` | 사용자와의 DM 룸 조회/생성 |
+| `search` | any | 메시지/사용자/태스크 통합 검색 |
+| `list_modules` | `modules:read` | 조직 모듈 목록 + 활성 상태 |
+
+### Gmail
+
+| 도구 | Scope | 설명 |
+|------|-------|------|
+| `gmail_list_threads` | `gmail:read` | 메일함 스레드 목록 (최근 30일 INBOX) |
+| `gmail_get_message` | `gmail:read` | 메일 본문 조회 |
+| `gmail_get_thread` | `gmail:read` | 스레드 전체 메시지 |
+| `gmail_list_message_attachments` | `gmail:read` | 메일 첨부 메타 조회 |
+| `gmail_modify_labels` | `gmail:write` | 라벨 추가/제거 (별표·읽음·중요·휴지통) |
+| `gmail_send` | `gmail:write` | 메일 발신 (RFC822) |
+| `gmail_create_draft` | `gmail:write` | 메일 초안 생성 (웹에서 검토 후 발송) |
+| `gmail_import_attachment` | `gmail:write` | 첨부를 Drive 로 가져오기 |
+
+### 메일 분류 · 처리 태그
+
+| 도구 | Scope | 설명 |
+|------|-------|------|
+| `list_email_tags` | `gmail:read` | 워크허브 분류 정규 태그 목록 |
+| `tag_email` | `gmail:write` | 메일에 분류 태그 추가/제거 |
+| `tag_email_batch` | `gmail:write` | 여러 메일 일괄 태그 (최대 100) |
+| `mark_email_processed` | `gmail:write` | MCP 처리 표시 기록 |
+
+### Google Drive
+
+| 도구 | Scope | 설명 |
+|------|-------|------|
+| `list_shared_drives` | `gdrive:read` | 연결된 공유 드라이브 목록 |
+| `attach_drive_file` | `gdrive:write` | Drive 파일을 메시지/태스크에 첨부 |
+
+### 재무 (Finance)
+
+| 도구 | Scope | 설명 |
+|------|-------|------|
+| `list_finance_clients` | `finance:read` | 거래처(client/vendor) 목록 |
+| `list_finance_contracts` | `finance:read` | 매출 계약 목록 |
+| `list_finance_billing_items` | `finance:read` | 계약의 청구·기성 행 |
+| `list_finance_expenses` | `finance:read` | 지출 목록 (기간 필터) |
+| `list_finance_receivables` | `finance:read` | 미수금 현황 (거래처별 + 연체일) |
+| `list_finance_sales_ledger` | `finance:read` | 매출대장 통합 보고서 |
+| `get_finance_summary` | `finance:read` | 재정 KPI (YTD 매출/지출/잔액) |
+| `create_finance_client` | `finance:write` | 거래처 등록 |
+| `create_finance_contract` | `finance:write` | 매출 계약 등록 (1천만↑ `confirm:true`) |
+| `create_finance_expense` | `finance:write` | 지출 등록 (1천만↑ `confirm:true`) |
+| `update_finance_expense` | `finance:write` | 지출 수정 (paid 행 거부) |
+| `record_billing_payment` | `finance:write` | 청구 행 입금 기록 (`confirm:true`) |
+| `attach_receipt_to_expense` | `finance:write` | 지출에 영수증/세금계산서 연결 |
+| `attach_invoice_to_billing` | `finance:write` | 청구에 인보이스/세금계산서 연결 |
+| `create_expense_from_email` | `finance:write` | Gmail 인보이스 메일+PDF → 지출 등록 |
+
+::: warning 쓰기 도구 가드
+- 금액이 큰 재무 쓰기(`create_finance_contract`/`create_finance_expense` 공급가 1천만 원 초과, `record_billing_payment`)는 `confirm: true` 를 명시해야 실행됩니다.
+- `update_finance_expense` 는 이미 `paid` 상태인 행을 수정하지 않습니다(회계 무결성).
+- `create_finance_expense` 는 자격증명/OTP 의심 메일을 소스로 거부합니다.
+:::
 
 각 도구의 상세 파라미터는 [API 레퍼런스](./api-reference)를 참고하세요.
 

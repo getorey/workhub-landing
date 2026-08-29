@@ -66,7 +66,7 @@ MCP 서버에서 제공하는 도구(tool)와 REST API의 전체 명세입니다
 
 `send_message`는 MCP 도구 경유이지만, **편집·삭제는 REST 엔드포인트**를 직접 호출합니다. SDK는 `updateMessage` / `deleteMessage` 네이티브 메서드로 노출됩니다.
 
-#### PUT /api/messages/{id}
+#### `PUT /api/messages/{id}`
 
 메시지 내용을 수정합니다.
 
@@ -81,7 +81,7 @@ MCP 서버에서 제공하는 도구(tool)와 REST API의 전체 명세입니다
 | `content` | string | O | 50,000자 | 새 본문 (마크다운) |
 | `content_html` | string | - | 50,000자 | HTML 본문 (서버 sanitize) |
 
-#### DELETE /api/messages/{id}
+#### `DELETE /api/messages/{id}`
 
 메시지를 soft delete 합니다 (`deleted_at` 설정). 다른 클라이언트에 `MessageDeleted` 이벤트가 브로드캐스트됩니다.
 
@@ -313,7 +313,7 @@ MCP 도구 외에 REST API를 통해 추가 기능에 접근할 수 있습니다
 
 ### 봇 DM 메시지 전송
 
-#### POST /api/bots/{botId}/dm-messages
+#### `POST /api/bots/{botId}/dm-messages`
 
 봇이 특정 사용자에게 DM 메시지를 직접 전송합니다. 봇 API 키로 인증합니다.
 
@@ -332,7 +332,7 @@ Content-Type: application/json
 
 ### 봇 API 키 관리
 
-#### POST /api/bots/{botId}/api-keys
+#### `POST /api/bots/{botId}/api-keys`
 
 새 API 키를 발급합니다. Scope와 만료일을 설정할 수 있습니다.
 
@@ -342,7 +342,7 @@ Content-Type: application/json
 | `scopes` | string[] | - | 접근 범위 (미지정 시 전체) |
 | `expires_in_days` | number | - | 만료일 (일 단위, 미지정 시 무제한) |
 
-#### DELETE /api/bots/{botId}/api-keys/{keyId}
+#### `DELETE /api/bots/{botId}/api-keys/{keyId}`
 
 특정 API 키를 즉시 폐기합니다.
 
@@ -350,7 +350,7 @@ Content-Type: application/json
 
 ### 봇 Webhook Secret
 
-#### POST /api/bots/{botId}/webhook-secret
+#### `POST /api/bots/{botId}/webhook-secret`
 
 Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있으면 새로 발급됩니다.
 
@@ -369,13 +369,13 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 - 조회: 같은 기관 멤버 누구나
 - 등록·삭제: `system_admin` / `org_admin` / `dept_admin`
 
-#### GET /api/bots/{botId}/commands
+#### `GET /api/bots/{botId}/commands`
 
 봇에 등록된 커스텀 명령 목록을 조회합니다.
 
 - **Scope** (봇 호출 시): `bots:commands:read`
 
-#### POST /api/bots/{botId}/commands
+#### `POST /api/bots/{botId}/commands`
 
 새 커스텀 명령을 등록합니다.
 
@@ -387,7 +387,7 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 | `description` | string | O | 500자 | 설명 (UI 팔레트 표시) |
 | `usage_hint` | string | - | 500자 | 사용법 힌트 |
 
-#### DELETE /api/bots/{botId}/commands/{commandName}
+#### `DELETE /api/bots/{botId}/commands/{commandName}`
 
 커스텀 명령을 삭제합니다.
 
@@ -397,7 +397,7 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 
 ### 채널 북마크
 
-#### POST /api/channels/{channelId}/bookmarks
+#### `POST /api/channels/{channelId}/bookmarks`
 
 메시지를 북마크합니다. 채널 멤버만 사용 가능합니다.
 
@@ -405,7 +405,7 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 |------|------|------|------|
 | `message_id` | string | O | 북마크할 메시지 UUID |
 
-#### GET /api/channels/{channelId}/bookmarks
+#### `GET /api/channels/{channelId}/bookmarks`
 
 북마크 목록을 조회합니다.
 
@@ -417,7 +417,7 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 | `sort` | string | `"desc"` | `"asc"` 또는 `"desc"` |
 | `limit` | number | 50 | 최대 100 |
 
-#### DELETE /api/channels/{channelId}/bookmarks/{messageId}
+#### `DELETE /api/channels/{channelId}/bookmarks/{messageId}`
 
 북마크를 삭제합니다.
 
@@ -425,7 +425,7 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 
 ### 채널 파일
 
-#### GET /api/channels/{channelId}/files
+#### `GET /api/channels/{channelId}/files`
 
 채널에 업로드된 파일을 검색/필터/정렬하여 조회합니다.
 
@@ -457,7 +457,7 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 
 ### Incoming Webhook
 
-#### POST /api/webhooks/incoming/{botId}
+#### `POST /api/webhooks/incoming/{botId}`
 
 외부 서비스에서 Workhub으로 메시지를 전송합니다.
 
@@ -480,7 +480,7 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 |----------|------|------|------|
 | `q` | string | O | 검색어 |
 
-#### GET /api/hashtags/preview/{type}/{id}
+#### `GET /api/hashtags/preview/{type}/{id}`
 
 해시태그 프리뷰 카드를 조회합니다.
 
@@ -507,3 +507,37 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 | `channel_id` | string | - | - | 채널 UUID |
 | `topic_id` | string | - | - | 토픽 UUID |
 | `dm_room_id` | string | - | - | DM 방 UUID |
+
+### MCP 개인 토큰 (Personal Access Token)
+
+개인용 MCP 토큰(JWT)을 발급/관리합니다. 발급자 본인 권한으로 `/api/mcp` 에 접근합니다. (내 프로필 → "Claude / MCP 연결" 화면과 동일)
+
+| METHOD | 경로 | 용도 | 인증 |
+|--------|------|------|------|
+| `GET` | `/api/me/mcp-tokens` | 내 MCP 토큰 목록 | User Token |
+| `POST` | `/api/me/mcp-tokens` | MCP 토큰 발급 (JWT 반환 — 1회만 표시) | User Token |
+| `DELETE` | `/api/me/mcp-tokens/{id}` | MCP 토큰 폐기 | User Token |
+
+### OAuth 2.1 MCP 서버 (동적 클라이언트)
+
+Claude 등 MCP 클라이언트가 OAuth 2.1(PKCE)로 직접 연결할 수 있도록 표준 엔드포인트를 제공합니다. 메타데이터는 자동 디스커버리됩니다.
+
+| METHOD | 경로 | 용도 | RFC |
+|--------|------|------|-----|
+| `GET` | `/.well-known/oauth-authorization-server` | 인가 서버 메타데이터 | RFC 8414 |
+| `GET` | `/.well-known/oauth-protected-resource` | 보호 리소스 메타데이터 | RFC 9728 |
+| `POST` | `/oauth/register` | 클라이언트 동적 등록 | RFC 7591 |
+| `GET` | `/oauth/authorize` | 인가 요청 (Authorization Code + PKCE) | RFC 6749 |
+| `POST` | `/oauth/authorize/decide` | 사용자 동의 후 code 발급 | - |
+| `POST` | `/oauth/token` | code → access token 교환 | RFC 6749 |
+| `POST` | `/oauth/revoke` | 토큰 폐기 | RFC 7009 |
+
+### 외부 서비스 수신 웹훅
+
+외부 서비스(외부 봇·Gmail·팝빌)가 워크허브로 보내는 수신 웹훅은 [Webhook 문서](./webhook#외부-서비스-workhub-수신-웹훅)를 참고하세요.
+
+| METHOD | 경로 | 용도 |
+|--------|------|------|
+| `POST` | `/api/webhooks/incoming/{botId}` | 외부 봇 메시지 송신 (HMAC 서명) |
+| `POST` | `/api/modules/gmail/push` | Gmail 실시간 수신 (Pub/Sub) |
+| `POST` | `/api/finance/webhooks/popbill/tax` | 팝빌 세금계산서 상태 변경 |

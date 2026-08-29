@@ -60,16 +60,22 @@ Content-Type: application/json
 
 ## 구독 가능한 이벤트
 
+봇 Webhook 엔진이 실제로 봇에게 전달하는 이벤트입니다.
+
 | 이벤트 | 설명 |
 |--------|------|
-| `message.created` | 새 메시지 생성 |
-| `message.updated` | 메시지 수정 |
-| `message.deleted` | 메시지 삭제 |
+| `message.created` | 새 메시지 생성 (DM/채널/토픽) |
 | `task.created` | 태스크 생성 |
-| `task.status_changed` | 태스크 상태 변경 |
-| `channel.updated` | 채널 정보 변경 |
-| `member.joined` | 채널에 멤버 참여 |
-| `member.left` | 채널에서 멤버 나감 |
+| `task.status` | 태스크 상태 변경 |
+| `interactive.action` | 인터랙티브 메시지 버튼/선택 응답 (해당 봇에 전달) |
+| `command.invoked` | 사용자가 봇 슬래시 커맨드 입력 (해당 봇에 전달) |
+
+::: tip 스코핑
+- **DM** 메시지는 그 DM 의 멤버인 봇에만, **채널** 메시지는 해당 채널 멤버/구독 봇에만 전달됩니다.
+- 봇이 보낸 메시지는 다른 봇에게 다시 전달되지 않습니다(무한 루프 방지).
+:::
+
+플랫폼 내부 EventBus(NATS)에는 위 외에도 `message.updated`/`deleted`, `topic.created`/`status`/`archived`, `task.assigned`/`updated`/`deleted`, `bot.*`, `audit.log` 등이 발행되며, 실시간 화면 갱신(SSE)·알림에 사용됩니다. 봇 Webhook 으로는 위 표의 5종이 전달됩니다.
 
 ## 서명 검증
 
@@ -186,16 +192,29 @@ Webhook 전송 실패 시 지수 백오프(exponential backoff)로 재시도합�
 | 시도 | 대기 시간 | 설명 |
 |------|----------|------|
 | 1차 | 즉시 | 최초 전송 |
-| 2차 | 약 1분 | 1차 실패 후 |
-| 3차 | 약 5분 | 2차 실패 후 |
+| 2차 | 1초 | 1차 실패 후 |
+| 3차 | 2초 | 2차 실패 후 |
+| 4차 | 4초 | 3차 실패 후 |
 
-- 최대 3회 재시도
-- 5초 이내에 응답하지 않으면 타임아웃
+- 최대 3회 재시도 (총 4회 전송 시도)
+- 응답 타임아웃 10초
+- `5xx` 응답만 재시도하며, `4xx` 는 즉시 실패 처리합니다
+
+## 외부 서비스 → Workhub 수신 웹훅
+
+봇 Incoming 외에, 워크허브가 외부 서비스로부터 직접 수신하는 웹훅입니다(운영자/모듈 설정 대상).
+
+| 경로 | 용도 | 검증 |
+|------|------|------|
+| `POST /api/webhooks/incoming/{bot_id}` | 외부 봇의 메시지 송신 요청 (`send_message`) | HMAC-SHA256 (`X-Workhub-Signature`) |
+| `POST /api/modules/gmail/push` | Gmail 실시간 수신 (Cloud Pub/Sub 푸시) | Google Pub/Sub (운영 프록시 단에서 검증 권장) |
+| `POST /api/finance/webhooks/popbill/tax` | 팝빌 세금계산서 상태 변경(발행/승인/실패/취소) | 사전공유 비밀 (`X-Workhub-Webhook-Secret` 헤더 또는 `?secret=`) |
+
+> 팝빌 웹훅은 `POPBILL_WEBHOOK_SECRET` 환경변수가 설정된 경우에만 마운트됩니다. Gmail 푸시는 Google 연결(googleconn)이 활성일 때만 동작합니다.
 
 ## 배포 시 고려사항
 
 - Webhook URL은 외부에서 접근 가능한 공개 URL이어야 합니다
 - HTTPS 사용을 권장합니다
 - 서명 검증을 반드시 활성화하세요
-- 이벤트 처리는 5초 이내에 완료해야 합니다
-- 긴 작업은 이벤트 수신 후 비동기로 처리하세요
+- 이벤트 처리는 빠르게 응답(2xx)하고, 긴 작업은 수신 후 비동기로 처리하세요
