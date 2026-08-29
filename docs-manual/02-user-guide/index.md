@@ -14,11 +14,6 @@
 8. [검색](./search.md) — 통합 검색
 9. [파일](./files.md) — 파일 업로드, 다운로드
 10. [봇 사용법](./bots.md) — 스탠드업, 태스크 알림, 투표/설문, 취합 봇
-11. [Claude / MCP 클라이언트 연결](./claude-mcp-integration.md) — Personal Access Token 발급, Claude Desktop / Claude Code 설정
-12. [명함 → 내 핸드폰 연락처 동기화](./crm-phone-sync.md) — CRM 담당자를 본인 스마트폰 연락처로 (iOS / Android)
-13. [Gmail 모듈](./gmail-module.md) — 본인 Gmail 워크허브 통합 + 메일 분류 + Claude MCP 스킬로 자동 트리아지
-14. [Google Drive 모듈](./gdrive-module.md) — 메시지/CRM/Gmail 첨부의 Drive 원본 통합 + 자동 권한 관리
-15. [AI 명령어](./ai-commands.md) — 워크허브 슬래시 명령 (`/ai`, `/요약`, `/번역` 등)
 
 ## 계정 관리
 

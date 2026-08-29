@@ -16,8 +16,6 @@ export default defineConfig({
     siteTitle: 'Workhub 도움말',
 
     nav: [
-      // 랜딩 페이지로 돌아가기 — base(/workhub-landing/docs/) 외부 절대 경로 사용.
-      { text: '← Workhub 홈', link: 'https://getorey.github.io/workhub-landing/' },
       { text: '시작하기', link: '/01-getting-started/' },
       { text: '사용자 가이드', link: '/02-user-guide/' },
       {

@@ -66,7 +66,7 @@ MCP 서버에서 제공하는 도구(tool)와 REST API의 전체 명세입니다
 
 `send_message`는 MCP 도구 경유이지만, **편집·삭제는 REST 엔드포인트**를 직접 호출합니다. SDK는 `updateMessage` / `deleteMessage` 네이티브 메서드로 노출됩니다.
 
-#### `PUT /api/messages/{id}`
+#### PUT /api/messages/{id}
 
 메시지 내용을 수정합니다.
 
@@ -81,7 +81,7 @@ MCP 서버에서 제공하는 도구(tool)와 REST API의 전체 명세입니다
 | `content` | string | O | 50,000자 | 새 본문 (마크다운) |
 | `content_html` | string | - | 50,000자 | HTML 본문 (서버 sanitize) |
 
-#### `DELETE /api/messages/{id}`
+#### DELETE /api/messages/{id}
 
 메시지를 soft delete 합니다 (`deleted_at` 설정). 다른 클라이언트에 `MessageDeleted` 이벤트가 브로드캐스트됩니다.
 
@@ -313,7 +313,7 @@ MCP 도구 외에 REST API를 통해 추가 기능에 접근할 수 있습니다
 
 ### 봇 DM 메시지 전송
 
-#### `POST /api/bots/{botId}/dm-messages`
+#### POST /api/bots/{botId}/dm-messages
 
 봇이 특정 사용자에게 DM 메시지를 직접 전송합니다. 봇 API 키로 인증합니다.
 
@@ -332,7 +332,7 @@ Content-Type: application/json
 
 ### 봇 API 키 관리
 
-#### `POST /api/bots/{botId}/api-keys`
+#### POST /api/bots/{botId}/api-keys
 
 새 API 키를 발급합니다. Scope와 만료일을 설정할 수 있습니다.
 
@@ -342,7 +342,7 @@ Content-Type: application/json
 | `scopes` | string[] | - | 접근 범위 (미지정 시 전체) |
 | `expires_in_days` | number | - | 만료일 (일 단위, 미지정 시 무제한) |
 
-#### `DELETE /api/bots/{botId}/api-keys/{keyId}`
+#### DELETE /api/bots/{botId}/api-keys/{keyId}
 
 특정 API 키를 즉시 폐기합니다.
 
@@ -350,7 +350,7 @@ Content-Type: application/json
 
 ### 봇 Webhook Secret
 
-#### `POST /api/bots/{botId}/webhook-secret`
+#### POST /api/bots/{botId}/webhook-secret
 
 Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있으면 새로 발급됩니다.
 
@@ -369,13 +369,13 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 - 조회: 같은 기관 멤버 누구나
 - 등록·삭제: `system_admin` / `org_admin` / `dept_admin`
 
-#### `GET /api/bots/{botId}/commands`
+#### GET /api/bots/{botId}/commands
 
 봇에 등록된 커스텀 명령 목록을 조회합니다.
 
 - **Scope** (봇 호출 시): `bots:commands:read`
 
-#### `POST /api/bots/{botId}/commands`
+#### POST /api/bots/{botId}/commands
 
 새 커스텀 명령을 등록합니다.
 
@@ -387,7 +387,7 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 | `description` | string | O | 500자 | 설명 (UI 팔레트 표시) |
 | `usage_hint` | string | - | 500자 | 사용법 힌트 |
 
-#### `DELETE /api/bots/{botId}/commands/{commandName}`
+#### DELETE /api/bots/{botId}/commands/{commandName}
 
 커스텀 명령을 삭제합니다.
 
@@ -397,7 +397,7 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 
 ### 채널 북마크
 
-#### `POST /api/channels/{channelId}/bookmarks`
+#### POST /api/channels/{channelId}/bookmarks
 
 메시지를 북마크합니다. 채널 멤버만 사용 가능합니다.
 
@@ -405,7 +405,7 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 |------|------|------|------|
 | `message_id` | string | O | 북마크할 메시지 UUID |
 
-#### `GET /api/channels/{channelId}/bookmarks`
+#### GET /api/channels/{channelId}/bookmarks
 
 북마크 목록을 조회합니다.
 
@@ -417,7 +417,7 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 | `sort` | string | `"desc"` | `"asc"` 또는 `"desc"` |
 | `limit` | number | 50 | 최대 100 |
 
-#### `DELETE /api/channels/{channelId}/bookmarks/{messageId}`
+#### DELETE /api/channels/{channelId}/bookmarks/{messageId}
 
 북마크를 삭제합니다.
 
@@ -425,7 +425,7 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 
 ### 채널 파일
 
-#### `GET /api/channels/{channelId}/files`
+#### GET /api/channels/{channelId}/files
 
 채널에 업로드된 파일을 검색/필터/정렬하여 조회합니다.
 
@@ -457,7 +457,7 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 
 ### Incoming Webhook
 
-#### `POST /api/webhooks/incoming/{botId}`
+#### POST /api/webhooks/incoming/{botId}
 
 외부 서비스에서 Workhub으로 메시지를 전송합니다.
 
@@ -480,7 +480,7 @@ Webhook 서명 검증용 시크릿을 생성합니다. 기존 시크릿이 있�
 |----------|------|------|------|
 | `q` | string | O | 검색어 |
 
-#### `GET /api/hashtags/preview/{type}/{id}`
+#### GET /api/hashtags/preview/{type}/{id}
 
 해시태그 프리뷰 카드를 조회합니다.
 
