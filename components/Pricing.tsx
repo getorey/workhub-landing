@@ -8,49 +8,61 @@ const plans = [
     name: "온라인 테스트",
     price: "무료",
     period: "",
-    target: "기능을 직접 체험해 보세요",
+    priceNote: "",
+    target: "기본 기능 체험",
     features: [
       "프로젝트 생성",
       "채널 생성 및 대화",
-      "봇 기능 체험",
       "테스트 공간 — 자료가 삭제될 수 있습니다",
     ],
     cta: "지금 체험하기",
     featured: true,
     href: "#",
-    note: "테스트용 환경입니다",
   },
   {
-    name: "Community Edition",
-    price: "무료",
-    period: "(오픈소스)",
-    target: "직접 설치해서 운영하는 팀",
+    name: "Basic",
+    price: "49,000원",
+    period: "",
+    priceNote: "1~10명 / 월 / 부가세 별도",
+    target: "협업 기능 이용",
     features: [
-      "Docker 이미지 배포",
-      "전체 기능 제한 없음",
-      "데이터 주권 100%",
-      "커뮤니티 지원",
+      "프로젝트 생성",
+      "채널 생성 및 대화",
+      "기본 알림",
     ],
-    cta: "준비중",
+    cta: "문의하기",
     featured: false,
-    href: null,
-    note: null,
+    href: "mailto:13thathat@gmail.com",
+  },
+  {
+    name: "Standard",
+    price: "79,000원",
+    period: "",
+    priceNote: "1~10명 / 월 / 부가세 별도",
+    target: "멀티 업무 환경",
+    features: [
+      "프로젝트 생성",
+      "채널 생성 및 대화",
+      "관리자 페이지 (재무, CRM, 메일)",
+      "기본 알림",
+      "모바일 알림",
+    ],
+    cta: "문의하기",
+    featured: false,
+    href: "mailto:13thathat@gmail.com",
   },
   {
     name: "Enterprise",
     price: "문의",
     period: "",
-    target: "대규모 조직",
+    priceNote: "대규모 조직",
+    target: "전용 인스턴스",
     features: [
-      "전용 인스턴스",
-      "SLA 99.9%",
-      "감사 로그 무제한",
       "전담 기술 지원",
     ],
     cta: "문의하기",
     featured: false,
     href: "mailto:13thathat@gmail.com",
-    note: null,
   },
 ];
 
@@ -80,7 +92,7 @@ export default function Pricing() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
         >
           {plans.map((p) => (
             <motion.div
@@ -102,7 +114,10 @@ export default function Pricing() {
                 <span className="text-3xl font-extrabold">{p.price}</span>
                 <span className="text-sm text-gray-400">{p.period}</span>
               </div>
-              <p className="mt-2 text-sm text-gray-400">{p.target}</p>
+              {p.priceNote && (
+                <p className="mt-1 text-xs text-gray-500">{p.priceNote}</p>
+              )}
+              <p className="mt-2 text-sm font-medium text-gray-300">{p.target}</p>
               <ul className="mt-6 flex-1 space-y-2">
                 {p.features.map((f) => {
                   const isWarning = f.includes("삭제될 수 있습니다");

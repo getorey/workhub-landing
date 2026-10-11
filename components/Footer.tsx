@@ -1,4 +1,4 @@
-const basePath = process.env.NODE_ENV === "production" ? "/workhub-landing" : "";
+const basePath = ""; // 커스텀 도메인 — 서브경로 없음
 
 export default function Footer() {
   return (

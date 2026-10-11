@@ -34,3 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 로컬 배포 산출물 (deploy-local.sh 가 생성, gh-pages 로 push)
+out/
+.next/

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+const basePath = ""; // 커스텀 도메인 — 서브경로 없음
+
 const links = [
   { label: "강점", href: "#features" },
   { label: "기능", href: "#bots" },
@@ -10,7 +12,7 @@ const links = [
   { label: "기술", href: "#tech" },
   { label: "보안", href: "#security" },
   { label: "가격", href: "#pricing" },
-  { label: "문서", href: "/docs/" },
+  { label: "문서", href: `${basePath}/docs/` },
 ];
 
 export default function Navbar() {
@@ -22,7 +24,7 @@ export default function Navbar() {
         <a href="#" className="flex items-center" aria-label="Workhub">
           {/* Issue #208 — brand-kit horizontal lockup (mono white for dark nav) */}
           <img
-            src="/brand-lockup-horizontal-white.svg"
+            src={`${basePath}/brand-lockup-horizontal-white.svg`}
             alt="Workhub"
             className="h-7 w-auto"
           />
